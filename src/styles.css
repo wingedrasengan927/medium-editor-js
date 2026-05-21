@@ -1,0 +1,10 @@
+
+.editor-wrapper {
+  border: 2px solid gray;
+}
+#lexical-editor {
+  padding: 5px;
+}
+#lexical-editor:focus-visible {
+  outline: none;
+}
