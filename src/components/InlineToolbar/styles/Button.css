@@ -1,0 +1,41 @@
+@import "./theme.css";
+
+.toolbar-button {
+  display: flex;
+  color: var(--text-color-dark);
+  background: var(--button-background-dark);
+  border: none;
+  border-radius: 0px;
+  appearance: none;
+  font-size: 1rem;
+  margin: 0;
+  outline: none;
+  padding: 4px 8px;
+  margin-right: -6px;
+  cursor: pointer;
+}
+
+.toolbar-button[data-pressed] {
+  color: var(--highlight-background);
+}
+
+.toolbar-button[data-pressed]:hover svg {
+  filter: none;
+}
+
+.toolbar-button svg {
+  transition: filter 300ms;
+}
+
+.toolbar-button:hover svg {
+  filter: drop-shadow(0 0 6px var(--text-color-hover-dark));
+}
+
+.toolbar-button[data-disabled] {
+  color: var(--text-color-disabled-dark);
+  cursor: default;
+}
+
+.toolbar-button[data-disabled] svg {
+  filter: none;
+}

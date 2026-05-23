@@ -1,0 +1,24 @@
+/* Color theme. Dark variables are what the inline toolbar uses. */
+:root {
+  /* Dark Theme */
+  --background-color-dark: #1d1d1d;
+  --gray-50-dark: #101010;
+  --gray-100-dark: #393939;
+  --gray-200-dark: #4f4f4f;
+  --gray-300-dark: #686868;
+  --gray-400-dark: #848484;
+  --gray-500-dark: #a7a7a7;
+  --gray-600-dark: #cfcfcf;
+  --purple-300-dark: #6f46ed;
+  --purple-400-dark: #8e6ef1;
+
+  --text-color-dark: var(--gray-600-dark);
+  --text-color-hover-dark: var(--gray-600-dark);
+  --text-color-disabled-dark: var(--gray-200-dark);
+  --border-color-dark: var(--gray-300-dark);
+  --field-background-dark: var(--gray-50-dark);
+  --field-text-color-dark: var(--gray-600-dark);
+  --button-background-dark: var(--gray-50-dark);
+
+  --highlight-background: #6f46ed;
+}
