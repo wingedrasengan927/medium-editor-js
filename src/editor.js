@@ -4,6 +4,7 @@ import { createEditor } from "lexical";
 
 import { config as defaultConfig } from "./editorConfig.js";
 import { registerInlineToolbarPlugin } from "./plugins/InlineToolbarPlugin.js";
+import { registerBlockToolbarPlugin } from "./plugins/BlockToolbarPlugin.js";
 
 export default function initializeEditor(editorRef, config = defaultConfig) {
   const editor = createEditor(config);
@@ -11,7 +12,8 @@ export default function initializeEditor(editorRef, config = defaultConfig) {
 
   mergeRegister(
     registerRichText(editor),
-    registerInlineToolbarPlugin(editor)
+    registerInlineToolbarPlugin(editor),
+    registerBlockToolbarPlugin(editor)
   );
 
   return editor;

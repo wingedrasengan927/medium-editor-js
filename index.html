@@ -2,12 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>medium-editor-js</title>
   </head>
   <body>
     <div id="app">
+      <nav class="navbar">
+        <div class="navbar-links">
+          <a
+            class="navbar-btn"
+            href="https://github.com/wingedrasengan927/medium-editor-js"
+            target="_blank"
+          >GitHub</a>
+        </div>
+        <div class="action-grp">
+          <button class="navbar-btn" id="copy-html-btn">Copy HTML</button>
+          <button class="navbar-btn" id="copy-json-btn">Copy JSON</button>
+          <button class="navbar-btn" id="copy-text-btn">Copy Text</button>
+        </div>
+      </nav>
       <div class="editor-wrapper">
         <div id="lexical-editor" contenteditable="true"></div>
       </div>

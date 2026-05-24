@@ -1,5 +1,6 @@
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { LinkNode } from "@lexical/link";
+import { HorizontalDividerNode } from "./nodes/HorizontalDividerNode.js";
 
 const theme = {
   paragraph: "medium-paragraph",
@@ -15,11 +16,12 @@ const theme = {
   },
   quote: "medium-quote",
   link: "medium-link",
+  divider: "medium-divider",
 };
 
 export const config = {
   namespace: "medium-editor",
   theme,
   onError: console.error,
-  nodes: [HeadingNode, QuoteNode, LinkNode],
+  nodes: [HeadingNode, QuoteNode, LinkNode, HorizontalDividerNode],
 };
