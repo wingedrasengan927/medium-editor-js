@@ -5,6 +5,10 @@ import { createEditor } from "lexical";
 import { config as defaultConfig } from "./editorConfig.js";
 import { registerInlineToolbarPlugin } from "./plugins/InlineToolbarPlugin.js";
 import { registerBlockToolbarPlugin } from "./plugins/BlockToolbarPlugin.js";
+import {
+  registerMathInlinePlugin,
+  registerMathBlockPlugin,
+} from "./plugins/MathPlugin.js";
 
 export default function initializeEditor(editorRef, config = defaultConfig) {
   const editor = createEditor(config);
@@ -13,7 +17,9 @@ export default function initializeEditor(editorRef, config = defaultConfig) {
   mergeRegister(
     registerRichText(editor),
     registerInlineToolbarPlugin(editor),
-    registerBlockToolbarPlugin(editor)
+    registerBlockToolbarPlugin(editor),
+    registerMathInlinePlugin(editor),
+    registerMathBlockPlugin(editor)
   );
 
   return editor;

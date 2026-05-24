@@ -6,12 +6,13 @@ import "./styles/Popover.css";
 const OFFSCREEN = -1000;
 
 export class BlockToolbar {
+  #outsideClickHandler = null;
+
   constructor(editor, gap = 8) {
     this.editor = editor;
     this.gap = gap;
     this.isOpen = false;
-    this._outsideClickHandler = null;
-    this._buildDom();
+    this.#buildDom();
   }
 
   show(x, y) {
@@ -21,24 +22,24 @@ export class BlockToolbar {
     this.triggerElement.style.top = `${y - height / 2}px`;
 
     if (this.isOpen) {
-      this._positionPopover();
+      this.#positionPopover();
     }
   }
 
   hide() {
     this.triggerElement.style.display = "none";
-    this._closePopover();
+    this.#closePopover();
   }
 
   destroy() {
-    if (this._outsideClickHandler) {
-      document.removeEventListener("mousedown", this._outsideClickHandler);
+    if (this.#outsideClickHandler) {
+      document.removeEventListener("mousedown", this.#outsideClickHandler);
     }
     this.triggerElement.remove();
     this.popoverElement.remove();
   }
 
-  _buildDom() {
+  #buildDom() {
     const trigger = document.createElement("button");
     trigger.type = "button";
     trigger.className = "block-toolbar-trigger";
@@ -48,9 +49,9 @@ export class BlockToolbar {
     trigger.addEventListener("mousedown", (e) => e.preventDefault());
     trigger.addEventListener("click", () => {
       if (this.isOpen) {
-        this._closePopover();
+        this.#closePopover();
       } else {
-        this._openPopover();
+        this.#openPopover();
       }
     });
 
@@ -58,12 +59,12 @@ export class BlockToolbar {
     popover.className = "block-toolbar-popover";
     popover.style.cssText = `position: absolute; top: ${OFFSCREEN}px; left: ${OFFSCREEN}px; display: none;`;
 
-    const dividerBtn = this._createButton(
+    const dividerBtn = this.#createButton(
       lineDashedSvg,
       "Insert horizontal divider",
       () => {
         this.editor.dispatchCommand(INSERT_HORIZONTAL_DIVIDER_COMMAND, undefined);
-        this._closePopover();
+        this.#closePopover();
       }
     );
     popover.appendChild(dividerBtn);
@@ -75,7 +76,7 @@ export class BlockToolbar {
     this.popoverElement = popover;
   }
 
-  _createButton(svg, label, onClick) {
+  #createButton(svg, label, onClick) {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "block-toolbar-button";
@@ -86,28 +87,28 @@ export class BlockToolbar {
     return btn;
   }
 
-  _openPopover() {
+  #openPopover() {
     this.isOpen = true;
     this.triggerElement.setAttribute("data-open", "");
     this.popoverElement.style.display = "flex";
-    this._positionPopover();
+    this.#positionPopover();
 
     requestAnimationFrame(() => {
       this.popoverElement.classList.add("visible");
     });
 
-    this._outsideClickHandler = (e) => {
+    this.#outsideClickHandler = (e) => {
       if (
         !this.triggerElement.contains(e.target) &&
         !this.popoverElement.contains(e.target)
       ) {
-        this._closePopover();
+        this.#closePopover();
       }
     };
-    document.addEventListener("mousedown", this._outsideClickHandler);
+    document.addEventListener("mousedown", this.#outsideClickHandler);
   }
 
-  _closePopover() {
+  #closePopover() {
     if (!this.isOpen) return;
     this.isOpen = false;
     this.triggerElement.removeAttribute("data-open");
@@ -119,13 +120,13 @@ export class BlockToolbar {
       }
     }, 200);
 
-    if (this._outsideClickHandler) {
-      document.removeEventListener("mousedown", this._outsideClickHandler);
-      this._outsideClickHandler = null;
+    if (this.#outsideClickHandler) {
+      document.removeEventListener("mousedown", this.#outsideClickHandler);
+      this.#outsideClickHandler = null;
     }
   }
 
-  _positionPopover() {
+  #positionPopover() {
     const triggerRect = this.triggerElement.getBoundingClientRect();
     const { height } = this.popoverElement.getBoundingClientRect();
 

@@ -18,6 +18,11 @@ import {
 import { $setBlocksType, $isAtNodeEnd } from "@lexical/selection";
 import { $toggleLink, $isLinkNode } from "@lexical/link";
 import { $findMatchingParent, mergeRegister } from "@lexical/utils";
+import { $isMathNode } from "../nodes/MathNode.js";
+import {
+  $isMathHighlightNodeInline,
+  $isMathHighlightNodeBlock,
+} from "../nodes/MathHighlightNode.js";
 
 import { InlineToolbar } from "../components/InlineToolbar/InlineToolbar.js";
 
@@ -160,6 +165,21 @@ export function registerInlineToolbarPlugin(editor) {
           toolbar.hide();
           return false;
         }
+
+        const nodes = selection.getNodes();
+        // Don't show if any Math node is in the selection
+        const hasMathNode = nodes.some((node) => $isMathNode(node));
+        // Don't show if a single MathHighlight node is selected
+        const isSingleMathHighlight =
+          nodes.length === 1 &&
+          ($isMathHighlightNodeInline(nodes[0]) ||
+            $findMatchingParent(nodes[0], $isMathHighlightNodeBlock));
+
+        if (hasMathNode || isSingleMathHighlight) {
+          toolbar.hide();
+          return false;
+        }
+
         toolbar.show();
         return false;
       },

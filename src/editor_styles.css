@@ -80,6 +80,57 @@
   color: var(--text-color-light);
 }
 
+.math-highlight-inline {
+  background-color: #e5e7eb;
+  font-family: "firacode", monospace;
+  padding: 1px 2px;
+  color: var(--highlight-background);
+  font-size: calc(100% - 2px);
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+.math-highlight-inline::before,
+.math-highlight-inline::after {
+  content: "$";
+  color: #b0b0b0;
+  /* Make them unselectable/uneditable in appearance */
+  pointer-events: none;
+  user-select: none;
+}
+
+.math-rendered-inline,
+.math-rendered-inline *,
+.math-rendered-block,
+.math-rendered-block * {
+  cursor: pointer;
+}
+
+.math-rendered-block {
+  display: block;
+}
+
+.math-highlight-block {
+  background-color: #e5e7eb;
+  font-family: "firacode", monospace;
+  padding: 4px 8px;
+  color: var(--highlight-background);
+  font-size: calc(100% - 2px);
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  display: block;
+}
+
+.math-highlight-block::before,
+.math-highlight-block::after {
+  content: "$$";
+  color: #b0b0b0;
+  /* Make them unselectable/uneditable in appearance */
+  pointer-events: none;
+  user-select: none;
+  display: block;
+}
+
 .medium-divider {
   width: 100%;
   display: flex;

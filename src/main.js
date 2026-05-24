@@ -2,6 +2,7 @@ import "./editor_styles.css";
 import "./styles.css";
 import { $getRoot } from "lexical";
 import { $generateHtmlFromNodes } from "@lexical/html";
+import copySvg from "@tabler/icons/outline/copy.svg?raw";
 import initializeEditor from "./editor.js";
 
 const editorRef = document.getElementById("lexical-editor");
@@ -11,19 +12,25 @@ async function copyToClipboard(text) {
   await navigator.clipboard.writeText(text);
 }
 
-document.getElementById("copy-html-btn").addEventListener("click", () => {
+const copyHtmlBtn = document.getElementById("copy-html-btn");
+copyHtmlBtn.innerHTML = `${copySvg}<span>HTML</span>`;
+copyHtmlBtn.addEventListener("click", () => {
   editor.read(() => {
     const html = $generateHtmlFromNodes(editor, null);
     copyToClipboard(html);
   });
 });
 
-document.getElementById("copy-json-btn").addEventListener("click", () => {
+const copyJsonBtn = document.getElementById("copy-json-btn");
+copyJsonBtn.innerHTML = `${copySvg}<span>JSON</span>`;
+copyJsonBtn.addEventListener("click", () => {
   const json = JSON.stringify(editor.getEditorState().toJSON(), null, 2);
   copyToClipboard(json);
 });
 
-document.getElementById("copy-text-btn").addEventListener("click", () => {
+const copyTextBtn = document.getElementById("copy-text-btn");
+copyTextBtn.innerHTML = `${copySvg}<span>Text</span>`;
+copyTextBtn.addEventListener("click", () => {
   editor.read(() => {
     const text = $getRoot().getTextContent();
     copyToClipboard(text);

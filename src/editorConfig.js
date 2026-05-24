@@ -1,6 +1,11 @@
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { LinkNode } from "@lexical/link";
 import { HorizontalDividerNode } from "./nodes/HorizontalDividerNode.js";
+import { MathNode } from "./nodes/MathNode.js";
+import {
+  MathHighlightNodeInline,
+  MathHighlightNodeBlock,
+} from "./nodes/MathHighlightNode.js";
 
 const theme = {
   paragraph: "medium-paragraph",
@@ -17,11 +22,25 @@ const theme = {
   quote: "medium-quote",
   link: "medium-link",
   divider: "medium-divider",
+  math: {
+    renderedInline: "math-rendered-inline",
+    renderedBlock: "math-rendered-block",
+    highlightInline: "math-highlight-inline",
+    highlightBlock: "math-highlight-block",
+  },
 };
 
 export const config = {
   namespace: "medium-editor",
   theme,
   onError: console.error,
-  nodes: [HeadingNode, QuoteNode, LinkNode, HorizontalDividerNode],
+  nodes: [
+    HeadingNode,
+    QuoteNode,
+    LinkNode,
+    HorizontalDividerNode,
+    MathNode,
+    MathHighlightNodeInline,
+    MathHighlightNodeBlock,
+  ],
 };

@@ -78,7 +78,14 @@ body {
   text-decoration: none;
   font-family: "firacode", monospace;
   cursor: pointer;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.navbar-btn svg {
+  width: 18px;
+  height: 18px;
 }
 
 .navbar-btn:active {

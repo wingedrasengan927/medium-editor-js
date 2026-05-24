@@ -25,6 +25,8 @@ import "./styles/Toolbar.css";
 const TOP_OFFSET = 16;
 
 export class InlineToolbar {
+  #unregister;
+
   constructor(editor) {
     this.editor = editor;
     this.state = {
@@ -46,7 +48,7 @@ export class InlineToolbar {
       onClose: () => this.hide(),
     });
 
-    this._unregister = editor.registerUpdateListener(({ editorState }) => {
+    this.#unregister = editor.registerUpdateListener(({ editorState }) => {
       editorState.read(() => {
         const selection = $getSelection();
         this.#updateStateFromSelection(selection);
@@ -77,7 +79,7 @@ export class InlineToolbar {
   }
 
   destroy() {
-    this._unregister?.();
+    this.#unregister?.();
     this.element.remove();
     this.linkToolbar.destroy();
   }
