@@ -9,6 +9,7 @@ import {
   registerMathInlinePlugin,
   registerMathBlockPlugin,
 } from "./plugins/MathPlugin.js";
+import { registerImagePlugin } from "./plugins/ImagePlugin.js";
 
 export default function initializeEditor(editorRef, config = defaultConfig) {
   const editor = createEditor(config);
@@ -19,7 +20,8 @@ export default function initializeEditor(editorRef, config = defaultConfig) {
     registerInlineToolbarPlugin(editor),
     registerBlockToolbarPlugin(editor),
     registerMathInlinePlugin(editor),
-    registerMathBlockPlugin(editor)
+    registerMathBlockPlugin(editor),
+    registerImagePlugin(editor)
   );
 
   return editor;

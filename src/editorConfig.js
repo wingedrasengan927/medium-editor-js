@@ -6,6 +6,7 @@ import {
   MathHighlightNodeInline,
   MathHighlightNodeBlock,
 } from "./nodes/MathHighlightNode.js";
+import { ImageNode } from "./nodes/ImageNode.js";
 
 const theme = {
   paragraph: "medium-paragraph",
@@ -22,6 +23,7 @@ const theme = {
   quote: "medium-quote",
   link: "medium-link",
   divider: "medium-divider",
+  img: "medium-img",
   math: {
     renderedInline: "math-rendered-inline",
     renderedBlock: "math-rendered-block",
@@ -42,5 +44,6 @@ export const config = {
     MathNode,
     MathHighlightNodeInline,
     MathHighlightNodeBlock,
+    ImageNode,
   ],
 };

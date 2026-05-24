@@ -1,6 +1,8 @@
 import plusSvg from "@tabler/icons/outline/plus.svg?raw";
 import lineDashedSvg from "@tabler/icons/outline/line-dashed.svg?raw";
+import photoSvg from "@tabler/icons/outline/photo.svg?raw";
 import { INSERT_HORIZONTAL_DIVIDER_COMMAND } from "../../plugins/BlockToolbarPlugin.js";
+import { INSERT_IMAGE_COMMAND } from "../../plugins/ImagePlugin.js";
 import "./styles/Popover.css";
 
 const OFFSCREEN = -1000;
@@ -58,6 +60,35 @@ export class BlockToolbar {
     const popover = document.createElement("div");
     popover.className = "block-toolbar-popover";
     popover.style.cssText = `position: absolute; top: ${OFFSCREEN}px; left: ${OFFSCREEN}px; display: none;`;
+
+    // File input for image upload
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.style.display = "none";
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (typeof event.target.result === "string") {
+          this.editor.dispatchCommand(INSERT_IMAGE_COMMAND, event.target.result);
+        }
+      };
+      reader.readAsDataURL(file);
+      fileInput.value = ""; // Reset input
+    });
+    document.body.appendChild(fileInput);
+
+    const imageBtn = this.#createButton(
+      photoSvg,
+      "Insert image",
+      () => {
+        this.#closePopover();
+        fileInput.click();
+      }
+    );
+    popover.appendChild(imageBtn);
 
     const dividerBtn = this.#createButton(
       lineDashedSvg,
