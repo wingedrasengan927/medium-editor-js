@@ -10,6 +10,8 @@ import {
   registerMathBlockPlugin,
 } from "./plugins/MathPlugin.js";
 import { registerImagePlugin } from "./plugins/ImagePlugin.js";
+import { registerListPlugin } from "./plugins/ListPlugin.js";
+import { registerTabInterceptorPlugin } from "./plugins/TabInterceptorPlugin.js";
 
 export default function initializeEditor(editorRef, config = defaultConfig) {
   const editor = createEditor(config);
@@ -21,7 +23,9 @@ export default function initializeEditor(editorRef, config = defaultConfig) {
     registerBlockToolbarPlugin(editor),
     registerMathInlinePlugin(editor),
     registerMathBlockPlugin(editor),
-    registerImagePlugin(editor)
+    registerImagePlugin(editor),
+    registerListPlugin(editor),
+    registerTabInterceptorPlugin(editor)
   );
 
   return editor;

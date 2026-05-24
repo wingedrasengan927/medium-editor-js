@@ -7,6 +7,7 @@ import {
   MathHighlightNodeBlock,
 } from "./nodes/MathHighlightNode.js";
 import { ImageNode } from "./nodes/ImageNode.js";
+import { ListItemNode, ListNode } from "@lexical/list";
 
 const theme = {
   paragraph: "medium-paragraph",
@@ -24,6 +25,14 @@ const theme = {
   link: "medium-link",
   divider: "medium-divider",
   img: "medium-img",
+  list: {
+    nested: {
+      listitem: "medium-nested-listitem",
+    },
+    ol: "medium-ol",
+    ul: "medium-ul",
+    listitem: "medium-listitem",
+  },
   math: {
     renderedInline: "math-rendered-inline",
     renderedBlock: "math-rendered-block",
@@ -45,5 +54,7 @@ export const config = {
     MathHighlightNodeInline,
     MathHighlightNodeBlock,
     ImageNode,
+    ListNode,
+    ListItemNode,
   ],
 };
