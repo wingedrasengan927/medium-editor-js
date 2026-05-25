@@ -8,6 +8,7 @@ import {
 } from "./nodes/MathHighlightNode.js";
 import { ImageNode } from "./nodes/ImageNode.js";
 import { ListItemNode, ListNode } from "@lexical/list";
+import { CodeNode, CodeHighlightNode } from "@lexical/code-core";
 
 const theme = {
   paragraph: "medium-paragraph",
@@ -21,6 +22,8 @@ const theme = {
     italic: "medium-italic",
     code: "medium-code",
   },
+  code: "medium-code-block",
+  codeHighlight: "medium-code-highlight",
   quote: "medium-quote",
   link: "medium-link",
   divider: "medium-divider",
@@ -56,5 +59,7 @@ export const config = {
     ImageNode,
     ListNode,
     ListItemNode,
+    CodeNode,
+    CodeHighlightNode,
   ],
 };

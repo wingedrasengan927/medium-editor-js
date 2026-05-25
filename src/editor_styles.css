@@ -43,6 +43,40 @@
   margin-right: 2px;
 }
 
+.medium-code-block {
+  font-family: "firacode", monospace;
+  display: block;
+  padding: 16px;
+  line-height: 1.5;
+  font-size: 15px;
+  overflow-x: auto;
+  border-radius: 8px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  position: relative;
+  tab-size: 2;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.medium-code-block[data-gutter] {
+  padding-left: 56px;
+}
+
+.medium-code-block::before {
+  content: attr(data-gutter);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  padding: 0 12px;
+  color: #64748b;
+  text-align: right;
+  min-width: 32px;
+  white-space: pre-wrap;
+  user-select: none;
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .medium-h1 {
   font-family: "playfair_display", serif;
   font-weight: 600;

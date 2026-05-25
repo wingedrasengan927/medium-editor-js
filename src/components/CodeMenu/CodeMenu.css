@@ -1,0 +1,125 @@
+.code-menu-container {
+  position: absolute;
+  display: flex;
+  gap: 8px;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+
+.code-menu-container.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.code-menu-dropdown {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.code-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-family: "helvetica-neue", sans-serif;
+  font-size: 13px;
+  line-height: 1;
+  color: #333333;
+  cursor: pointer;
+  min-width: 0; /* Remove fixed width */
+  padding: 4px 6px;
+  outline: none;
+}
+
+.code-menu-button > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.code-menu-button:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: -1px;
+}
+
+.code-menu-button svg {
+  width: 14px;
+  height: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.code-menu-popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: none;
+  flex-direction: column;
+  min-width: 160px;
+  z-index: 1001;
+  max-height: 300px;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.code-menu-popover.open {
+  display: flex;
+}
+
+.code-menu-search {
+  padding: 4px;
+  margin-bottom: 4px;
+}
+
+.code-menu-search input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-family: "helvetica-neue", sans-serif;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+  background: #f8fafc;
+}
+
+.code-menu-search input:focus {
+  border-color: #94a3b8;
+}
+
+.code-menu-options {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.code-menu-option {
+  font-family: "helvetica-neue", sans-serif;
+  padding: 0 8px;
+  border-radius: 6px;
+  outline: none;
+  cursor: default;
+  color: #333333;
+  font-size: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 32px;
+  background: transparent;
+}
+
+.code-menu-option:hover {
+  background: #3b82f6;
+  color: #ffffff;
+}

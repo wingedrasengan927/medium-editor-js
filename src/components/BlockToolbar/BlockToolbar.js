@@ -1,8 +1,10 @@
 import plusSvg from "@tabler/icons/outline/plus.svg?raw";
 import lineDashedSvg from "@tabler/icons/outline/line-dashed.svg?raw";
 import photoSvg from "@tabler/icons/outline/photo.svg?raw";
+import codeSvg from "@tabler/icons/outline/code.svg?raw";
 import { INSERT_HORIZONTAL_DIVIDER_COMMAND } from "../../plugins/BlockToolbarPlugin.js";
 import { INSERT_IMAGE_COMMAND } from "../../plugins/ImagePlugin.js";
+import { INSERT_CODE_BLOCK_COMMAND } from "../../plugins/CodePlugin.js";
 import "./styles/Popover.css";
 
 const OFFSCREEN = -1000;
@@ -99,6 +101,16 @@ export class BlockToolbar {
       }
     );
     popover.appendChild(dividerBtn);
+
+    const codeBtn = this.#createButton(
+      codeSvg,
+      "Insert code block",
+      () => {
+        this.editor.dispatchCommand(INSERT_CODE_BLOCK_COMMAND, undefined);
+        this.#closePopover();
+      }
+    );
+    popover.appendChild(codeBtn);
 
     document.body.appendChild(trigger);
     document.body.appendChild(popover);

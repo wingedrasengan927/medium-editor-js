@@ -18,6 +18,7 @@ import {
 import { $setBlocksType, $isAtNodeEnd } from "@lexical/selection";
 import { $toggleLink, $isLinkNode } from "@lexical/link";
 import { $findMatchingParent, mergeRegister } from "@lexical/utils";
+import { $isCodeNode } from "@lexical/code-core";
 import { $isMathNode } from "../nodes/MathNode.js";
 import {
   $isMathHighlightNodeInline,
@@ -167,15 +168,16 @@ export function registerInlineToolbarPlugin(editor) {
         }
 
         const nodes = selection.getNodes();
-        // Don't show if any Math node is in the selection
+        // Don't show if any Math node or Code node is in the selection
         const hasMathNode = nodes.some((node) => $isMathNode(node));
+        const hasCodeNode = nodes.some((node) => $isCodeNode(node) || $findMatchingParent(node, $isCodeNode));
         // Don't show if a single MathHighlight node is selected
         const isSingleMathHighlight =
           nodes.length === 1 &&
           ($isMathHighlightNodeInline(nodes[0]) ||
             $findMatchingParent(nodes[0], $isMathHighlightNodeBlock));
 
-        if (hasMathNode || isSingleMathHighlight) {
+        if (hasMathNode || hasCodeNode || isSingleMathHighlight) {
           toolbar.hide();
           return false;
         }

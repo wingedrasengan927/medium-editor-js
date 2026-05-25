@@ -12,6 +12,7 @@ import {
 import { registerImagePlugin } from "./plugins/ImagePlugin.js";
 import { registerListPlugin } from "./plugins/ListPlugin.js";
 import { registerTabInterceptorPlugin } from "./plugins/TabInterceptorPlugin.js";
+import { registerCodePlugin } from "./plugins/CodePlugin.js";
 
 export default function initializeEditor(editorRef, config = defaultConfig) {
   const editor = createEditor(config);
@@ -25,7 +26,8 @@ export default function initializeEditor(editorRef, config = defaultConfig) {
     registerMathBlockPlugin(editor),
     registerImagePlugin(editor),
     registerListPlugin(editor),
-    registerTabInterceptorPlugin(editor)
+    // registerTabInterceptorPlugin(editor),
+    registerCodePlugin(editor)
   );
 
   return editor;
