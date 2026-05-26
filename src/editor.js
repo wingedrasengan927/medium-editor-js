@@ -26,7 +26,7 @@ export default function initializeEditor(editorRef, config = defaultConfig) {
     registerMathBlockPlugin(editor),
     registerImagePlugin(editor),
     registerListPlugin(editor),
-    // registerTabInterceptorPlugin(editor),
+    registerTabInterceptorPlugin(editor),
     registerCodePlugin(editor)
   );
 
