@@ -1,8 +1,20 @@
 {
   "name": "medium-editor-js",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
   "type": "module",
+  "main": "./dist/index.es.js",
+  "module": "./dist/index.es.js",
+  "style": "./dist/index.css",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js"
+    },
+    "./style.css": "./dist/index.css"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
