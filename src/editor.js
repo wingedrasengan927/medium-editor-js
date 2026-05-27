@@ -14,6 +14,7 @@ import { registerListPlugin } from "./plugins/ListPlugin.js";
 import { registerTabInterceptorPlugin } from "./plugins/TabInterceptorPlugin.js";
 import { registerCodePlugin } from "./plugins/CodePlugin.js";
 import { registerMarkdownPlugin } from "./plugins/MarkdownPlugin.js";
+import { registerHistoryPlugin } from "./plugins/HistoryPlugin.js";
 
 export default function initializeEditor(editorRef, config = defaultConfig) {
   const editor = createEditor(config);
@@ -21,6 +22,7 @@ export default function initializeEditor(editorRef, config = defaultConfig) {
 
   mergeRegister(
     registerRichText(editor),
+    registerHistoryPlugin(editor),
     registerInlineToolbarPlugin(editor),
     registerBlockToolbarPlugin(editor),
     registerMathInlinePlugin(editor),
