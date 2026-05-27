@@ -1,4 +1,4 @@
-import { $insertList, $isListItemNode } from "@lexical/list";
+import { $insertList, $isListItemNode, $handleListInsertParagraph } from "@lexical/list";
 import {
   $getSelection,
   $isParagraphNode,
@@ -6,6 +6,7 @@ import {
   $createLineBreakNode,
   COMMAND_PRIORITY_HIGH,
   KEY_TAB_COMMAND,
+  KEY_ENTER_COMMAND,
   TextNode,
   ParagraphNode,
 } from "lexical";
@@ -52,6 +53,39 @@ export function registerListPlugin(editor) {
         }
       }
     }),
+
+    // Handle ENTER to outdent or exit empty list items
+    editor.registerCommand(
+      KEY_ENTER_COMMAND,
+      (event) => {
+        const selection = $getSelection();
+        if (!$isRangeSelection(selection) || !selection.isCollapsed()) {
+          return false;
+        }
+
+        const node = getSelectedNode(selection);
+        const listItemNode = $findMatchingParent(node, $isListItemNode);
+        if (!listItemNode) {
+          return false;
+        }
+
+        if (listItemNode.getTextContent() === "") {
+          if (event && event.preventDefault) {
+            event.preventDefault();
+          }
+          const indent = listItemNode.getIndent();
+          if (indent > 0) {
+            listItemNode.setIndent(indent - 1);
+            return true;
+          } else {
+            return $handleListInsertParagraph();
+          }
+        }
+
+        return false;
+      },
+      COMMAND_PRIORITY_HIGH
+    ),
 
     // Handle TAB to indent/outdent list items
     editor.registerCommand(
