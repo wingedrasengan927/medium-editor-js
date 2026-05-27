@@ -7,7 +7,7 @@
 #lexical-editor {
   min-height: 256px;
   padding: 16px;
-  font-size: 21px;
+  font-size: var(--editor-base-font, 21px);
   line-height: 1.8;
   outline: none;
   font-family: "merriweather", sans-serif;
@@ -48,7 +48,7 @@
   display: block;
   padding: 16px;
   line-height: 1.5;
-  font-size: 15px;
+  font-size: calc(15 / 21 * 1em);
   overflow-x: auto;
   border-radius: 8px;
   margin-top: 12px;
@@ -96,6 +96,7 @@
 .medium-h2,
 .medium-h3 {
   margin-bottom: 0px;
+  margin-top: calc(var(--editor-margin-top) * 1.5);
 }
 
 .medium-h2 .medium-code,
@@ -256,7 +257,7 @@
 
 @media (max-width: 640px) {
   #lexical-editor {
-    font-size: 18px;
+    font-size: calc(var(--editor-base-font, 21px) * 18 / 21);
   }
 
   .medium-code {

@@ -8,7 +8,7 @@ import initializeEditor from "./editor.js";
 import { MEDIUM_TRANSFORMERS } from "./plugins/markdownTransformers.js";
 
 const editorRef = document.getElementById("lexical-editor");
-const editor = initializeEditor(editorRef, undefined, { isHeadingOneFirst: true });
+const editor = initializeEditor(editorRef, undefined, { isHeadingOneFirst: true, fontSize: 'small' });
 
 async function copyToClipboard(text) {
   await navigator.clipboard.writeText(text);
