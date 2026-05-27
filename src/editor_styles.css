@@ -98,6 +98,13 @@
   margin-bottom: 0px;
 }
 
+.medium-h2 .medium-code,
+.medium-h3 .medium-code {
+  font-weight: 600;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
 .medium-quote {
   --quote-padding-left: 18px;
 

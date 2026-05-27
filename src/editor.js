@@ -15,8 +15,9 @@ import { registerTabInterceptorPlugin } from "./plugins/TabInterceptorPlugin.js"
 import { registerCodePlugin } from "./plugins/CodePlugin.js";
 import { registerMarkdownPlugin } from "./plugins/MarkdownPlugin.js";
 import { registerHistoryPlugin } from "./plugins/HistoryPlugin.js";
+import { registerTextBehaviourPlugin } from "./plugins/TextBehaviourPlugin.js";
 
-export default function initializeEditor(editorRef, config = defaultConfig) {
+export default function initializeEditor(editorRef, config = defaultConfig, { isHeadingOneFirst = false } = {}) {
   const editor = createEditor(config);
   editor.setRootElement(editorRef);
 
@@ -31,7 +32,8 @@ export default function initializeEditor(editorRef, config = defaultConfig) {
     registerListPlugin(editor),
     registerTabInterceptorPlugin(editor),
     registerCodePlugin(editor),
-    registerMarkdownPlugin(editor)
+    registerMarkdownPlugin(editor),
+    registerTextBehaviourPlugin(editor, { isHeadingOneFirst })
   );
 
   return editor;
