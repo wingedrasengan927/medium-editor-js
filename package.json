@@ -3,12 +3,12 @@
   "version": "1.0.1",
   "private": false,
   "type": "module",
-  "main": "./dist/index.es.js",
-  "module": "./dist/index.es.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "style": "./dist/index.css",
   "exports": {
     ".": {
-      "import": "./dist/index.es.js"
+      "import": "./dist/index.js"
     },
     "./style.css": "./dist/index.css"
   },
