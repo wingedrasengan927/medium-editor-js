@@ -2,8 +2,10 @@ import "./editor_styles.css";
 import "./styles.css";
 import { $getRoot } from "lexical";
 import { $generateHtmlFromNodes } from "@lexical/html";
+import { $convertToMarkdownString } from "@lexical/markdown";
 import copySvg from "@tabler/icons/outline/copy.svg?raw";
 import initializeEditor from "./editor.js";
+import { MEDIUM_TRANSFORMERS } from "./plugins/markdownTransformers.js";
 
 const editorRef = document.getElementById("lexical-editor");
 const editor = initializeEditor(editorRef);
@@ -18,6 +20,15 @@ copyHtmlBtn.addEventListener("click", () => {
   editor.read(() => {
     const html = $generateHtmlFromNodes(editor, null);
     copyToClipboard(html);
+  });
+});
+
+const copyMarkdownBtn = document.getElementById("copy-markdown-btn");
+copyMarkdownBtn.innerHTML = `${copySvg}<span>Markdown</span>`;
+copyMarkdownBtn.addEventListener("click", () => {
+  editor.read(() => {
+    const markdown = $convertToMarkdownString(MEDIUM_TRANSFORMERS);
+    copyToClipboard(markdown);
   });
 });
 
