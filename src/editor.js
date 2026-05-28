@@ -17,7 +17,7 @@ import { registerMarkdownPlugin } from "./plugins/MarkdownPlugin.js";
 import { registerHistoryPlugin } from "./plugins/HistoryPlugin.js";
 import { registerTextBehaviourPlugin } from "./plugins/TextBehaviourPlugin.js";
 
-export default function initializeEditor(editorRef, config = defaultConfig, { isHeadingOneFirst = false, fontSize = 'medium' } = {}) {
+export default function initializeEditor(editorRef, config = defaultConfig, { disableImage = false, isHeadingOneFirst = false, fontSize = 'medium' } = {}) {
   // Map font size parameter to base pixels
   let sizeValue = '21px'; // default (medium)
   if (fontSize === 'small') sizeValue = '18px';
@@ -33,10 +33,10 @@ export default function initializeEditor(editorRef, config = defaultConfig, { is
     registerRichText(editor),
     registerHistoryPlugin(editor),
     registerInlineToolbarPlugin(editor),
-    registerBlockToolbarPlugin(editor),
+    registerBlockToolbarPlugin(editor, { disableImage }),
     registerMathInlinePlugin(editor),
     registerMathBlockPlugin(editor),
-    registerImagePlugin(editor),
+    ...(disableImage ? [] : [registerImagePlugin(editor)]),
     registerListPlugin(editor),
     registerTabInterceptorPlugin(editor),
     registerCodePlugin(editor),

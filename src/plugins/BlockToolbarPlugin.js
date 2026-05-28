@@ -21,12 +21,12 @@ export const INSERT_HORIZONTAL_DIVIDER_COMMAND = createCommand(
   "INSERT_HORIZONTAL_DIVIDER_COMMAND"
 );
 
-export function registerBlockToolbarPlugin(editor, { gap = 8 } = {}) {
+export function registerBlockToolbarPlugin(editor, { gap = 8, disableImage = false } = {}) {
   if (!editor.hasNodes([HorizontalDividerNode])) {
     throw new Error("HorizontalDividerNode not registered on editor");
   }
 
-  const toolbar = new BlockToolbar(editor, gap);
+  const toolbar = new BlockToolbar(editor, gap, disableImage);
   let selectionCoords = null;
 
   function updateVisibility() {

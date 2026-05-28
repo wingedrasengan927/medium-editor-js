@@ -50,6 +50,7 @@
   line-height: 1.5;
   font-size: calc(15 / 21 * 1em);
   overflow-x: auto;
+  white-space: pre;
   border-radius: 8px;
   margin-top: 12px;
   margin-bottom: 12px;
@@ -253,14 +254,4 @@
 .medium-listitem .medium-listitem .medium-listitem .medium-listitem>.medium-ol {
   list-style-type: upper-roman;
   /* I, II, III */
-}
-
-@media (max-width: 640px) {
-  #lexical-editor {
-    font-size: calc(var(--editor-base-font, 21px) * 18 / 21);
-  }
-
-  .medium-code {
-    font-size: calc(100% - 4px);
-  }
 }

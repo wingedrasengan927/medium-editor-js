@@ -12,9 +12,10 @@ const OFFSCREEN = -1000;
 export class BlockToolbar {
   #outsideClickHandler = null;
 
-  constructor(editor, gap = 8) {
+  constructor(editor, gap = 8, disableImage = false) {
     this.editor = editor;
     this.gap = gap;
+    this.disableImage = disableImage;
     this.isOpen = false;
     this.#buildDom();
   }
@@ -63,34 +64,36 @@ export class BlockToolbar {
     popover.className = "block-toolbar-popover";
     popover.style.cssText = `position: absolute; top: ${OFFSCREEN}px; left: ${OFFSCREEN}px; display: none;`;
 
-    // File input for image upload
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = "image/*";
-    fileInput.style.display = "none";
-    fileInput.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (typeof event.target.result === "string") {
-          this.editor.dispatchCommand(INSERT_IMAGE_COMMAND, event.target.result);
-        }
-      };
-      reader.readAsDataURL(file);
-      fileInput.value = ""; // Reset input
-    });
-    document.body.appendChild(fileInput);
+    if (!this.disableImage) {
+      // File input for image upload
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "image/*";
+      fileInput.style.display = "none";
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          if (typeof event.target.result === "string") {
+            this.editor.dispatchCommand(INSERT_IMAGE_COMMAND, event.target.result);
+          }
+        };
+        reader.readAsDataURL(file);
+        fileInput.value = ""; // Reset input
+      });
+      document.body.appendChild(fileInput);
 
-    const imageBtn = this.#createButton(
-      photoSvg,
-      "Insert image",
-      () => {
-        this.#closePopover();
-        fileInput.click();
-      }
-    );
-    popover.appendChild(imageBtn);
+      const imageBtn = this.#createButton(
+        photoSvg,
+        "Insert image",
+        () => {
+          this.#closePopover();
+          fileInput.click();
+        }
+      );
+      popover.appendChild(imageBtn);
+    }
 
     const dividerBtn = this.#createButton(
       lineDashedSvg,
