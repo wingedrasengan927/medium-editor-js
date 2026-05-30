@@ -46,7 +46,7 @@
 .medium-code-block {
   font-family: "firacode", monospace;
   display: block;
-  padding: 16px;
+  padding: 48px 16px 16px 16px;
   line-height: 1.5;
   font-size: calc(15 / 21 * 1em);
   overflow-x: auto;
@@ -67,7 +67,7 @@
   content: attr(data-gutter);
   position: absolute;
   left: 0;
-  top: 16px;
+  top: 48px;
   padding: 0 12px;
   color: #64748b;
   text-align: right;

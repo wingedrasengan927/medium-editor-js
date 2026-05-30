@@ -1,7 +1,7 @@
 .code-menu-container {
   position: absolute;
   display: flex;
-  gap: 8px;
+  gap: 12px;
   z-index: 1000;
   opacity: 0;
   pointer-events: none;
@@ -23,17 +23,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4px;
+  gap: 6px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 4px;
+  border-radius: 6px;
   font-family: "helvetica-neue", sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
   color: #333333;
   cursor: pointer;
-  min-width: 0; /* Remove fixed width */
-  padding: 4px 6px;
+  min-width: 110px;
+  padding: 4px 8px;
   outline: none;
 }
 
@@ -41,6 +41,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #f1f5f9;
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
 }
 
 .code-menu-button:focus-visible {
