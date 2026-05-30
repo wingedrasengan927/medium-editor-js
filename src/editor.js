@@ -15,6 +15,7 @@ import { registerTabInterceptorPlugin } from "./plugins/TabInterceptorPlugin.js"
 import { registerCodePlugin } from "./plugins/CodePlugin.js";
 import { registerHistoryPlugin } from "./plugins/HistoryPlugin.js";
 import { registerTextBehaviourPlugin } from "./plugins/TextBehaviourPlugin.js";
+import { registerMarkdownPlugin } from "./plugins/MarkdownPlugin.js";
 
 export default function initializeEditor(editorRef, config = defaultConfig, { disableImage = false, isHeadingOneFirst = false, fontSize = 'medium' } = {}) {
   // Map font size parameter to base pixels
@@ -39,7 +40,8 @@ export default function initializeEditor(editorRef, config = defaultConfig, { di
     registerListPlugin(editor),
     registerTabInterceptorPlugin(editor),
     registerCodePlugin(editor),
-    registerTextBehaviourPlugin(editor, { isHeadingOneFirst })
+    registerTextBehaviourPlugin(editor, { isHeadingOneFirst }),
+    registerMarkdownPlugin(editor)
   );
 
   return editor;

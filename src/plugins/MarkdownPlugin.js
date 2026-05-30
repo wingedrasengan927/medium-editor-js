@@ -4,7 +4,7 @@ import {
   $isRangeSelection,
   $setSelection,
   COMMAND_PRIORITY_HIGH,
-  PASTE_COMMAND,
+  createCommand,
 } from "lexical";
 import { $isCodeNode } from "@lexical/code-core";
 import { $convertFromMarkdownString } from "@lexical/markdown";
@@ -13,9 +13,11 @@ import { MEDIUM_TRANSFORMERS } from "./markdownTransformers.js";
 const getClipboardPlainText = (clipboardData) =>
   clipboardData.getData("text/plain") || clipboardData.getData("text") || "";
 
+export const MARKDOWN_PASTE_COMMAND = createCommand("MARKDOWN_PASTE_COMMAND");
+
 export function registerMarkdownPlugin(editor) {
   return editor.registerCommand(
-    PASTE_COMMAND,
+    MARKDOWN_PASTE_COMMAND,
     (event) => {
       const clipboardData = event.clipboardData;
       if (!clipboardData) {
