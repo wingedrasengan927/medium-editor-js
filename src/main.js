@@ -28,9 +28,32 @@ copyMarkdownBtn.innerHTML = `${copySvg}<span>Markdown</span>`;
 copyMarkdownBtn.addEventListener("click", () => {
   editor.read(() => {
     const markdown = $convertToMarkdownString(MEDIUM_TRANSFORMERS);
-    copyToClipboard(markdown);
+    // @lexical/markdown escapes every * _ ` ~ \ in text (e.g. input_features
+    // -> input\_features). Remove those backslash escapes so the raw markdown
+    // reads naturally. Fenced code blocks aren't escaped by lexical, so they
+    // are left untouched here.
+    const unescaped = unescapeMarkdown(markdown);
+    copyToClipboard(unescaped);
   });
 });
+
+// Reverses the character escaping that @lexical/markdown applies on export.
+// It only strips a backslash when it precedes a markdown special char it
+// would have escaped, so legitimate text is preserved.
+function unescapeMarkdown(markdown) {
+  const lines = markdown.split("\n");
+  let inFence = false;
+  return lines
+    .map((line) => {
+      if (/^\s*```/.test(line)) {
+        inFence = !inFence;
+        return line;
+      }
+      if (inFence) return line;
+      return line.replace(/\\([*_`~\\])/g, "$1");
+    })
+    .join("\n");
+}
 
 const copyJsonBtn = document.getElementById("copy-json-btn");
 copyJsonBtn.innerHTML = `${copySvg}<span>JSON</span>`;
