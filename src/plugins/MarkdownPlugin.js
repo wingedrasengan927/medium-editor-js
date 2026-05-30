@@ -6,7 +6,6 @@ import {
   COMMAND_PRIORITY_HIGH,
   PASTE_COMMAND,
 } from "lexical";
-import { $findMatchingParent } from "@lexical/utils";
 import { $isCodeNode } from "@lexical/code-core";
 import { $convertFromMarkdownString } from "@lexical/markdown";
 import { MEDIUM_TRANSFORMERS } from "./markdownTransformers.js";
@@ -18,6 +17,9 @@ export function registerMarkdownPlugin(editor) {
   return editor.registerCommand(
     PASTE_COMMAND,
     (event) => {
+      // Disabled markdown pasting
+      return false;
+
       const clipboardData = event.clipboardData;
       if (!clipboardData) {
         return false;
@@ -30,16 +32,6 @@ export function registerMarkdownPlugin(editor) {
 
       const selection = $getSelection();
       if (!$isRangeSelection(selection)) {
-        return false;
-      }
-
-      const node = selection.anchor.getNode();
-      const parentWithSpecialPaste = $findMatchingParent(node, (n) => {
-        const type = n.getType();
-        return $isCodeNode(n) || type === "math" || type === "math-highlight-block" || type === "math-highlight-inline";
-      });
-
-      if (parentWithSpecialPaste) {
         return false;
       }
 

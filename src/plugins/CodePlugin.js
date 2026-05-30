@@ -18,7 +18,6 @@ import {
   TextNode,
   $isLineBreakNode,
   $isParagraphNode,
-  PASTE_COMMAND,
 } from "lexical";
 import { $findMatchingParent, mergeRegister } from "@lexical/utils";
 import { CodeMenu } from "../components/CodeMenu/CodeMenu.js";
@@ -179,36 +178,6 @@ export function registerCodePlugin(editor) {
       BLUR_COMMAND,
       () => {
         handleBlur();
-        return false;
-      },
-      COMMAND_PRIORITY_HIGH
-    ),
-    editor.registerCommand(
-      PASTE_COMMAND,
-      (event) => {
-        const selection = $getSelection();
-        if ($isRangeSelection(selection)) {
-          const node = selection.anchor.getNode();
-          const codeNode = $findMatchingParent(node, $isCodeNode);
-          if (codeNode) {
-            const clipboardData = event.clipboardData;
-            if (!clipboardData) return false;
-            
-            let pastedText = 
-              clipboardData.getData('text/plain') || 
-              clipboardData.getData('text') || 
-              clipboardData.getData('text/uri-list');
-              
-            if (!pastedText) return false;
-            
-            // Normalize CRLF to LF to prevent double newlines
-            pastedText = pastedText.replace(/\r\n/g, '\n');
-            
-            event.preventDefault();
-            selection.insertRawText(pastedText);
-            return true;
-          }
-        }
         return false;
       },
       COMMAND_PRIORITY_HIGH
