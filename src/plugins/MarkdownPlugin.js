@@ -17,9 +17,6 @@ export function registerMarkdownPlugin(editor) {
   return editor.registerCommand(
     PASTE_COMMAND,
     (event) => {
-      // Disabled markdown pasting
-      return false;
-
       const clipboardData = event.clipboardData;
       if (!clipboardData) {
         return false;

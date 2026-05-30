@@ -13,7 +13,6 @@ import { registerImagePlugin } from "./plugins/ImagePlugin.js";
 import { registerListPlugin } from "./plugins/ListPlugin.js";
 import { registerTabInterceptorPlugin } from "./plugins/TabInterceptorPlugin.js";
 import { registerCodePlugin } from "./plugins/CodePlugin.js";
-import { registerMarkdownPlugin } from "./plugins/MarkdownPlugin.js";
 import { registerHistoryPlugin } from "./plugins/HistoryPlugin.js";
 import { registerTextBehaviourPlugin } from "./plugins/TextBehaviourPlugin.js";
 
@@ -40,7 +39,6 @@ export default function initializeEditor(editorRef, config = defaultConfig, { di
     registerListPlugin(editor),
     registerTabInterceptorPlugin(editor),
     registerCodePlugin(editor),
-    registerMarkdownPlugin(editor),
     registerTextBehaviourPlugin(editor, { isHeadingOneFirst })
   );
 
