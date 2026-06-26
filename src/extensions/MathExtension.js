@@ -1,7 +1,26 @@
-import { defineExtension, mergeRegister } from "lexical";
-import { MathNode } from "../nodes/MathNode.js";
-import { MathHighlightNodeBlock } from "../nodes/MathHighlightNodeBlock.js";
-import { MathHighlightNodeInline } from "../nodes/MathHighlightNodeInline.js";
+import {
+	defineExtension,
+	mergeRegister,
+	$getSelection,
+	$isNodeSelection,
+	$isRangeSelection,
+	$setSelection,
+	SELECTION_CHANGE_COMMAND,
+	BLUR_COMMAND,
+	COMMAND_PRIORITY_HIGH,
+} from "lexical";
+import { $findMatchingParent } from "@lexical/utils";
+import { MathNode, $createMathNode, $isMathNode } from "../nodes/MathNode.js";
+import {
+	MathHighlightNodeBlock,
+	$createMathHighlightNodeBlock,
+	$isMathHighlightNodeBlock,
+} from "../nodes/MathHighlightNodeBlock.js";
+import {
+	MathHighlightNodeInline,
+	$createMathHighlightNodeInline,
+	$isMathHighlightNodeInline,
+} from "../nodes/MathHighlightNodeInline.js";
 
 function typesetMath(element) {
 	const mathJax = window.MathJax;
@@ -17,6 +36,141 @@ function typesetMath(element) {
 	} else if (mathJax.typesetPromise) {
 		run();
 	}
+}
+
+// Helper to strip math delimiters based on inline/block type
+function stripDelimiters(equation, isInline) {
+	if (isInline) {
+		if (equation.startsWith("$") && equation.endsWith("$")) {
+			return equation.slice(1, -1);
+		}
+	} else {
+		if (equation.startsWith("$$") && equation.endsWith("$$")) {
+			return equation.slice(2, -2);
+		}
+	}
+	return equation;
+}
+
+// Helper to convert MathNode to the appropriate MathHighlight node
+function convertMathToMathHighlightNode(mathNode) {
+	const equation = stripDelimiters(
+		mathNode.getEquation(),
+		mathNode.isInline(),
+	);
+	const mathHighlightNode = mathNode.isInline()
+		? $createMathHighlightNodeInline(equation)
+		: $createMathHighlightNodeBlock(equation);
+	mathNode.replace(mathHighlightNode);
+	mathHighlightNode.select();
+}
+
+// Helper to convert MathHighlight node back to MathNode
+function convertMathHighlightToMathNode(node) {
+	let equation = node.getTextContent();
+	if (!equation) {
+		node.remove();
+		return;
+	}
+
+	// Convert to block math node if the user wraps the inline equation with additional '$' delimiters.
+	if ($isMathHighlightNodeInline(node)) {
+		let isBlock = false;
+		if (
+			equation.startsWith("$") &&
+			equation.endsWith("$") &&
+			equation.length >= 2
+		) {
+			equation = equation.slice(1, -1);
+			isBlock = true;
+		}
+
+		const mathNode = isBlock
+			? $createMathNode(`$$${equation}$$`, false)
+			: $createMathNode(`$${equation}$`, true);
+		node.replace(mathNode);
+	} else if ($isMathHighlightNodeBlock(node)) {
+		const mathNode = $createMathNode(`$$${equation}$$`, false);
+		node.replace(mathNode);
+	}
+}
+
+// Helper to identify the single active math highlight node where the cursor is
+function getActiveMathHighlightNode(selection) {
+	if ($isRangeSelection(selection)) {
+		const anchorNode = selection.anchor.getNode();
+		return $findMatchingParent(
+			anchorNode,
+			(node) =>
+				$isMathHighlightNodeInline(node) ||
+				$isMathHighlightNodeBlock(node),
+		);
+	}
+	return null;
+}
+
+// Helper to restore all unselected/inactive math highlight nodes back to MathNodes
+function convertUnselectedMathHighlightNodes(editor, excludeKey = null) {
+	const editorState = editor.getEditorState();
+	const allNodes = editorState._nodeMap;
+	for (const [, node] of allNodes) {
+		if (
+			node.isAttached() &&
+			node.getKey() !== excludeKey &&
+			($isMathHighlightNodeInline(node) ||
+				$isMathHighlightNodeBlock(node))
+		) {
+			convertMathHighlightToMathNode(node);
+		}
+	}
+}
+
+export function registerMathSelectionToggle(editor) {
+	return editor.registerCommand(
+		SELECTION_CHANGE_COMMAND,
+		() => {
+			const selection = $getSelection();
+
+			// A single math node is selected; convert it to editing/highlight mode.
+			if ($isNodeSelection(selection)) {
+				const nodes = selection.getNodes();
+				if (
+					nodes.length === 1 &&
+					$isMathNode(nodes[0]) &&
+					editor.isEditable()
+				) {
+					convertMathToMathHighlightNode(nodes[0]);
+					return true;
+				}
+			}
+
+			// Find the active highlight node where the cursor is, and protect it.
+			const activeHighlightNode = getActiveMathHighlightNode(selection);
+			const excludeKey = activeHighlightNode
+				? activeHighlightNode.getKey()
+				: null;
+
+			// Convert unselected highlight nodes back to math nodes
+			convertUnselectedMathHighlightNodes(editor, excludeKey);
+
+			return false;
+		},
+		COMMAND_PRIORITY_HIGH,
+	);
+}
+
+export function registerMathBlur(editor) {
+	return editor.registerCommand(
+		BLUR_COMMAND,
+		() => {
+			editor.update(() => {
+				convertUnselectedMathHighlightNodes(editor);
+				$setSelection(null);
+			});
+			return false;
+		},
+		COMMAND_PRIORITY_HIGH,
+	);
 }
 
 export const MathExtension = defineExtension({
@@ -38,6 +192,9 @@ export const MathExtension = defineExtension({
 					}
 				}
 			}),
+
+			registerMathSelectionToggle(editor),
+			registerMathBlur(editor),
 		);
 	},
 });
