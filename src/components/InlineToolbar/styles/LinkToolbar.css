@@ -2,39 +2,39 @@
 @import "./theme.css";
 
 #link-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0px;
-  flex-direction: row;
-  background: var(--button-background-dark);
-  padding: 6px 8px;
-  border-radius: 6px;
-  position: absolute;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0px;
+	flex-direction: row;
+	background: var(--button-background-dark);
+	padding: 6px 8px;
+	border-radius: 6px;
+	position: absolute;
 }
 
 #link-toolbar .toolbar-group {
-  display: contents;
+	display: contents;
 }
 
 #link-toolbar .toolbar-group > button:last-child {
-  margin-right: 0;
+	margin-right: 0;
 }
 
 #link-toolbar .toolbar-textfield {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100px;
-  color: var(--text-color-dark);
-  background: var(--field-background-dark);
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	width: 100px;
+	color: var(--text-color-dark);
+	background: var(--field-background-dark);
 }
 
 #link-toolbar .toolbar-input {
-  padding: 0.286rem;
-  margin: 0;
-  background: var(--field-background-dark);
-  font-size: 1.143rem;
-  color: var(--field-text-color-dark);
-  border: none;
-  outline: none;
+	padding: 0.286rem;
+	margin: 0;
+	background: var(--field-background-dark);
+	font-size: 1.143rem;
+	color: var(--field-text-color-dark);
+	border: none;
+	outline: none;
 }

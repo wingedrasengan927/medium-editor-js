@@ -8,12 +8,12 @@ import checkSvg from "@tabler/icons/outline/check.svg?raw";
 import xSvg from "@tabler/icons/outline/x.svg?raw";
 
 export const icons = {
-  bold: boldSvg,
-  italic: italicSvg,
-  code: codeSvg,
-  textSize: textSizeSvg,
-  blockquote: blockquoteSvg,
-  link: linkSvg,
-  check: checkSvg,
-  x: xSvg,
+	bold: boldSvg,
+	italic: italicSvg,
+	code: codeSvg,
+	textSize: textSizeSvg,
+	blockquote: blockquoteSvg,
+	link: linkSvg,
+	check: checkSvg,
+	x: xSvg,
 };

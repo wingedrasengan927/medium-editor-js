@@ -1,75 +1,77 @@
 @import "../../InlineToolbar/styles/theme.css";
 
 .block-toolbar-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-color-light);
-  background: var(--button-background-light);
-  border: 2px solid var(--border-color-light);
-  border-radius: 50%;
-  padding: 4px;
-  cursor: pointer;
-  outline: none;
-  appearance: none;
-  margin: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-color-light);
+	background: var(--button-background-light);
+	border: 2px solid var(--border-color-light);
+	border-radius: 50%;
+	padding: 4px;
+	cursor: pointer;
+	outline: none;
+	appearance: none;
+	margin: 0;
 }
 
 .block-toolbar-trigger svg {
-  display: block;
-  width: 24px;
-  height: 24px;
-  transition: transform 0.3s ease;
+	display: block;
+	width: 24px;
+	height: 24px;
+	transition: transform 0.3s ease;
 }
 
 .block-toolbar-trigger[data-open] svg {
-  transform: rotate(45deg);
+	transform: rotate(45deg);
 }
 
 .block-toolbar-trigger:hover {
-  border-color: var(--border-color-hover-light);
+	border-color: var(--border-color-hover-light);
 }
 
 .block-toolbar-popover {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  padding: 0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	padding: 0;
+	background: transparent;
+	border: none;
+	box-shadow: none;
 
-  transition: transform 200ms, opacity 200ms;
-  opacity: 0;
-  transform: translateX(-8px);
+	transition:
+		transform 200ms,
+		opacity 200ms;
+	opacity: 0;
+	transform: translateX(-8px);
 }
 
 .block-toolbar-popover.visible {
-  opacity: 1;
-  transform: translateX(0);
+	opacity: 1;
+	transform: translateX(0);
 }
 
 .block-toolbar-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--highlight-background);
-  background: var(--button-background-light);
-  border: 2px solid var(--highlight-background);
-  border-radius: 50%;
-  padding: 4px;
-  cursor: pointer;
-  outline: none;
-  appearance: none;
-  margin: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--highlight-background);
+	background: var(--button-background-light);
+	border: 2px solid var(--highlight-background);
+	border-radius: 50%;
+	padding: 4px;
+	cursor: pointer;
+	outline: none;
+	appearance: none;
+	margin: 0;
 }
 
 .block-toolbar-button svg {
-  display: block;
-  width: 24px;
-  height: 24px;
+	display: block;
+	width: 24px;
+	height: 24px;
 }
 
 .block-toolbar-button:hover {
-  background: var(--highlight-hover-light);
+	background: var(--highlight-hover-light);
 }

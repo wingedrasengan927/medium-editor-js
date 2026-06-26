@@ -1,43 +1,43 @@
 /* Color theme. Dark variables for inline toolbar, light variables for block toolbar. */
 :root {
-  /* Light Theme */
-  --background-color-light: #f8f8f8;
-  --gray-50-light: #ffffff;
-  --gray-100-light: #d0d0d0;
-  --gray-200-light: #afafaf;
-  --gray-300-light: #8f8f8f;
-  --gray-400-light: #717171;
-  --gray-500-light: #555555;
-  --gray-600-light: #393939;
+	/* Light Theme */
+	--background-color-light: #f8f8f8;
+	--gray-50-light: #ffffff;
+	--gray-100-light: #d0d0d0;
+	--gray-200-light: #afafaf;
+	--gray-300-light: #8f8f8f;
+	--gray-400-light: #717171;
+	--gray-500-light: #555555;
+	--gray-600-light: #393939;
 
-  --text-color-light: var(--gray-600-light);
-  --text-color-disabled-light: var(--gray-200-light);
-  --border-color-light: var(--gray-300-light);
-  --border-color-hover-light: var(--gray-400-light);
-  --button-background-light: var(--gray-50-light);
-  --highlight-hover-light: rgb(0 0 0 / 0.07);
+	--text-color-light: var(--gray-600-light);
+	--text-color-disabled-light: var(--gray-200-light);
+	--border-color-light: var(--gray-300-light);
+	--border-color-hover-light: var(--gray-400-light);
+	--button-background-light: var(--gray-50-light);
+	--highlight-hover-light: rgb(0 0 0 / 0.07);
 
-  /* Dark Theme */
-  --background-color-dark: #1d1d1d;
-  --gray-50-dark: #101010;
-  --gray-100-dark: #393939;
-  --gray-200-dark: #4f4f4f;
-  --gray-300-dark: #686868;
-  --gray-400-dark: #848484;
-  --gray-500-dark: #a7a7a7;
-  --gray-600-dark: #cfcfcf;
-  --purple-300-dark: #6f46ed;
-  --purple-400-dark: #8e6ef1;
+	/* Dark Theme */
+	--background-color-dark: #1d1d1d;
+	--gray-50-dark: #101010;
+	--gray-100-dark: #393939;
+	--gray-200-dark: #4f4f4f;
+	--gray-300-dark: #686868;
+	--gray-400-dark: #848484;
+	--gray-500-dark: #a7a7a7;
+	--gray-600-dark: #cfcfcf;
+	--purple-300-dark: #6f46ed;
+	--purple-400-dark: #8e6ef1;
 
-  --text-color-dark: var(--gray-600-dark);
-  --text-color-hover-dark: var(--gray-600-dark);
-  --text-color-disabled-dark: var(--gray-200-dark);
-  --border-color-dark: var(--gray-300-dark);
-  --field-background-dark: var(--gray-50-dark);
-  --field-text-color-dark: var(--gray-600-dark);
-  --button-background-dark: var(--gray-50-dark);
-  --button-background-pressed-dark: var(--gray-100-dark);
-  --border-color-pressed-dark: var(--gray-50-dark);
+	--text-color-dark: var(--gray-600-dark);
+	--text-color-hover-dark: var(--gray-600-dark);
+	--text-color-disabled-dark: var(--gray-200-dark);
+	--border-color-dark: var(--gray-300-dark);
+	--field-background-dark: var(--gray-50-dark);
+	--field-text-color-dark: var(--gray-600-dark);
+	--button-background-dark: var(--gray-50-dark);
+	--button-background-pressed-dark: var(--gray-100-dark);
+	--border-color-pressed-dark: var(--gray-50-dark);
 
-  --highlight-background: #6f46ed;
+	--highlight-background: #6f46ed;
 }

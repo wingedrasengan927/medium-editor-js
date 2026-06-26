@@ -1,129 +1,116 @@
 import {
-  DecoratorNode,
-  $applyNodeReplacement,
-  $createNodeSelection,
-  $setSelection,
+	DecoratorNode,
+	$applyNodeReplacement,
+	$createNodeSelection,
+	$setSelection,
+	createState,
+	$getState,
+	$setState,
+	$create,
 } from "lexical";
 import { addClassNamesToElement } from "@lexical/utils";
 
-function typesetMath(element) {
-  const mathJax = window.MathJax;
-  if (!mathJax) {
-    return;
-  }
-  const run = () =>
-    mathJax
-      .typesetPromise([element])
-      .catch((err) => console.error("MathJax typesetting failed:", err));
-  if (mathJax.startup && mathJax.startup.promise) {
-    mathJax.startup.promise.then(run);
-  } else if (mathJax.typesetPromise) {
-    run();
-  }
-}
+// State definitions specify the node's properties
+const equationState = createState("equation", {
+	parse: (v) => (typeof v === "string" ? v : ""),
+});
+
+const inlineState = createState("inline", {
+	parse: (v) => (typeof v === "boolean" ? v : false),
+});
 
 export class MathNode extends DecoratorNode {
-  static getType() {
-    return "math";
-  }
+	$config() {
+		return this.config("math", {
+			extends: DecoratorNode,
+			stateConfigs: [
+				{ flat: true, stateConfig: equationState },
+				{ flat: true, stateConfig: inlineState },
+			],
+		});
+	}
 
-  static clone(node) {
-    return new MathNode(node.__equation, node.__inline, node.__key);
-  }
+	getEquation() {
+		return $getState(this, equationState);
+	}
 
-  constructor(equation, inline, key) {
-    super(key);
-    this.__equation = equation;
-    this.__inline = inline;
-  }
+	isInline() {
+		return $getState(this, inlineState);
+	}
 
-  getEquation() {
-    return this.__equation;
-  }
+	getTextContent() {
+		return this.getEquation();
+	}
 
-  getTextContent() {
-    return this.getEquation();
-  }
+	select() {
+		const nodeSelection = $createNodeSelection();
+		nodeSelection.add(this.getKey());
+		$setSelection(nodeSelection);
+		return nodeSelection;
+	}
 
-  isInline() {
-    return this.__inline;
-  }
+	createDOM(config) {
+		const element = document.createElement("span");
+		if (this.isInline()) {
+			addClassNamesToElement(element, config.theme.math.renderedInline);
+		} else {
+			addClassNamesToElement(element, config.theme.math.renderedBlock);
+		}
+		element.textContent = this.getEquation();
+		return element;
+	}
 
-  select() {
-    // only call during updates
-    const nodeSelection = $createNodeSelection();
-    nodeSelection.add(this.getKey());
-    $setSelection(nodeSelection);
-    return nodeSelection;
-  }
+	updateDOM(prevNode, dom, config) {
+		// If either property changes, lexical re-creates the element
+		const hasChanged =
+			this.isInline() !== prevNode.isInline() ||
+			this.getEquation() !== prevNode.getEquation();
 
-  createDOM(config) {
-    const element = document.createElement("span");
-    if (this.__inline) {
-      addClassNamesToElement(element, config.theme.math.renderedInline);
-    } else {
-      addClassNamesToElement(element, config.theme.math.renderedBlock);
-    }
-    element.textContent = this.__equation;
-    typesetMath(element);
-    return element;
-  }
+		return hasChanged;
+	}
 
-  updateDOM() {
-    return false;
-  }
+	// exportJSON and importJSON are implicitly handled by the config API
 
-  static importDOM() {
-    return {
-      span: () => ({
-        conversion: $convertMathElement,
-        priority: 1,
-      }),
-    };
-  }
+	static importDOM() {
+		return {
+			span: () => ({
+				conversion: $convertMathElement,
+				priority: 1,
+			}),
+		};
+	}
 
-  exportDOM(editor) {
-    const { element } = super.exportDOM(editor); // calls the createDOM method
-    element.textContent = this.getEquation();
-    element.setAttribute("data-lexical-math", "true");
-    element.setAttribute("data-math-inline", this.__inline.toString());
-    return { element };
-  }
+	exportDOM(editor) {
+		const { element } = super.exportDOM(editor);
+		element.textContent = this.getEquation();
+		element.setAttribute("data-lexical-math", "true");
+		element.setAttribute("data-math-inline", this.isInline().toString());
+		return { element };
+	}
 
-  static importJSON(serializedNode) {
-    const { equation, inline } = serializedNode;
-    return $createMathNode(equation, inline).updateFromJSON(serializedNode);
-  }
-
-  exportJSON() {
-    return {
-      ...super.exportJSON(),
-      equation: this.getEquation(),
-      inline: this.isInline(),
-    };
-  }
-
-  decorate() {
-    return null;
-  }
+	decorate() {
+		return null;
+	}
 }
 
 function $convertMathElement(element) {
-  let node = null;
-  if (element.getAttribute("data-lexical-math") === "true") {
-    const equation = element.textContent;
-    const inlineAttr = element.getAttribute("data-math-inline");
-    const inline = inlineAttr === "true";
-    node = $createMathNode(equation, inline);
-  }
-
-  return { node };
+	let node = null;
+	if (element.getAttribute("data-lexical-math") === "true") {
+		const equation = element.textContent;
+		const inlineAttr = element.getAttribute("data-math-inline");
+		const inline = inlineAttr === "true";
+		node = $createMathNode(equation, inline);
+	}
+	return { node };
 }
 
 export function $createMathNode(equation, inline) {
-  return $applyNodeReplacement(new MathNode(equation, inline));
+	const node = $create(MathNode);
+	$setState(node, equationState, equation);
+	$setState(node, inlineState, inline);
+	return $applyNodeReplacement(node);
 }
 
 export function $isMathNode(node) {
-  return node instanceof MathNode;
+	return node instanceof MathNode;
 }

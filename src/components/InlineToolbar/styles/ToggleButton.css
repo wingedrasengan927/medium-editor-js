@@ -1,41 +1,41 @@
 @import "./theme.css";
 
 .toolbar-toggle {
-  display: flex;
-  color: var(--text-color-dark);
-  background: var(--button-background-dark);
-  border: none;
-  border-radius: 0px;
-  appearance: none;
-  font-size: 1rem;
-  margin: 0;
-  outline: none;
-  padding: 4px 8px;
-  margin-right: -6px;
-  cursor: pointer;
+	display: flex;
+	color: var(--text-color-dark);
+	background: var(--button-background-dark);
+	border: none;
+	border-radius: 0px;
+	appearance: none;
+	font-size: 1rem;
+	margin: 0;
+	outline: none;
+	padding: 4px 8px;
+	margin-right: -6px;
+	cursor: pointer;
 }
 
 .toolbar-toggle[data-selected] {
-  color: var(--highlight-background);
+	color: var(--highlight-background);
 }
 
 .toolbar-toggle[data-selected]:hover svg {
-  filter: none;
+	filter: none;
 }
 
 .toolbar-toggle svg {
-  transition: filter 300ms;
+	transition: filter 300ms;
 }
 
 .toolbar-toggle:hover svg {
-  filter: drop-shadow(0 0 6px var(--text-color-hover-dark));
+	filter: drop-shadow(0 0 6px var(--text-color-hover-dark));
 }
 
 .toolbar-toggle[data-disabled] {
-  color: var(--text-color-disabled-dark);
-  cursor: default;
+	color: var(--text-color-disabled-dark);
+	cursor: default;
 }
 
 .toolbar-toggle[data-disabled] svg {
-  filter: none;
+	filter: none;
 }
