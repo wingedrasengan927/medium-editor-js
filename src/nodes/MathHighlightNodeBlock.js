@@ -29,14 +29,19 @@ export class MathHighlightNodeBlock extends ElementNode {
 		return false;
 	}
 
-	// Export as a standard MathNode (block). Hence import functions aren't required
 	exportJSON() {
 		return {
-			type: "math",
+			...super.exportJSON(),
+			type: "math-highlight-block",
 			version: 1,
-			equation: this.getTextContent(),
-			inline: false,
 		};
+	}
+
+	static importJSON(serializedNode) {
+		const node = $create(MathHighlightNodeBlock);
+		node.setFormat(serializedNode.format);
+		node.setDirection(serializedNode.direction);
+		return node;
 	}
 
 	exportDOM(editor) {

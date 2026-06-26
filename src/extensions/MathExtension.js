@@ -9,6 +9,8 @@ import {
 	SELECTION_CHANGE_COMMAND,
 	BLUR_COMMAND,
 	COMMAND_PRIORITY_HIGH,
+	$createTextNode,
+	PASTE_COMMAND,
 } from "lexical";
 import { $findMatchingParent } from "@lexical/utils";
 import { MathNode, $createMathNode, $isMathNode } from "../nodes/MathNode.js";
@@ -127,7 +129,7 @@ function convertUnselectedMathHighlightNodes(editor, excludeKey = null) {
 }
 
 // Toggle between MathNode <-> MathHighlightNode when selection changes
-export function registerMathSelectionToggle(editor) {
+function registerMathSelectionToggle(editor) {
 	return editor.registerCommand(
 		SELECTION_CHANGE_COMMAND,
 		() => {
@@ -162,7 +164,7 @@ export function registerMathSelectionToggle(editor) {
 }
 
 // Convert MathHighlightNodes to MathNodes on editor blur
-export function registerMathBlur(editor) {
+function registerMathBlur(editor) {
 	return editor.registerCommand(
 		BLUR_COMMAND,
 		() => {
@@ -177,7 +179,7 @@ export function registerMathBlur(editor) {
 }
 
 // Select MathNode on click
-export function registerMathClick(editor) {
+function registerMathClick(editor) {
 	return editor.registerMutationListener(
 		MathNode,
 		(mutatedNodes) => {
@@ -198,6 +200,84 @@ export function registerMathClick(editor) {
 			}
 		},
 		{ skipInitialization: false },
+	);
+}
+
+// Inserts a trailing space after creating an inline math or highlight node to prevent the cursor from getting stuck.
+function registerMathAutospace(editor) {
+	const handleAutospace = (nodeKey) => {
+		editor.update(() => {
+			const node = $getNodeByKey(nodeKey);
+			if (
+				$isMathHighlightNodeInline(node) ||
+				($isMathNode(node) && node.isInline())
+			) {
+				const nextSibling = node.getNextSibling();
+				if (!nextSibling) {
+					node.insertAfter($createTextNode(" "));
+				}
+			}
+		});
+	};
+
+	return mergeRegister(
+		editor.registerMutationListener(
+			MathHighlightNodeInline,
+			(mutations) => {
+				for (const [nodeKey, mutation] of mutations) {
+					if (mutation === "created") {
+						handleAutospace(nodeKey);
+					}
+				}
+			},
+			{ skipInitialization: false },
+		),
+		editor.registerMutationListener(
+			MathNode,
+			(mutations) => {
+				for (const [nodeKey, mutation] of mutations) {
+					if (mutation === "created") {
+						handleAutospace(nodeKey);
+					}
+				}
+			},
+			{ skipInitialization: false },
+		),
+	);
+}
+
+// Intercept paste inside MathHighlightNodeInline to prevent splitting the custom text node.
+function registerMathPaste(editor) {
+	return editor.registerCommand(
+		PASTE_COMMAND,
+		(event) => {
+			const selection = $getSelection();
+			const activeHighlightNode = getActiveMathHighlightNode(selection);
+
+			if (
+				!activeHighlightNode ||
+				!$isMathHighlightNodeInline(activeHighlightNode)
+			) {
+				return false;
+			}
+
+			const clipboardData = event.clipboardData;
+			if (!clipboardData) {
+				return false;
+			}
+
+			const plainText =
+				clipboardData.getData("text/plain") ||
+				clipboardData.getData("text");
+			if (!plainText) {
+				return false;
+			}
+
+			event.preventDefault();
+			selection.insertText(plainText);
+			return true;
+		},
+		COMMAND_PRIORITY_HIGH,
 	);
 }
 
@@ -229,6 +309,8 @@ export const MathExtension = defineExtension({
 			registerMathSelectionToggle(editor),
 			registerMathBlur(editor),
 			registerMathClick(editor),
+			registerMathAutospace(editor),
+			registerMathPaste(editor),
 		);
 	},
 });

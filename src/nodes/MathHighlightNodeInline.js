@@ -15,16 +15,21 @@ export class MathHighlightNodeInline extends TextNode {
 		return element;
 	}
 
-	// Since the Highlight node is transient, it exports itself as a MathNode.
-	// Hence, import functions are not needed here as they are handled by the MathNode.
-
 	exportJSON() {
 		return {
-			type: "math",
+			...super.exportJSON(),
+			type: "math-highlight-inline",
 			version: 1,
-			equation: this.getTextContent(),
-			inline: true,
 		};
+	}
+
+	static importJSON(serializedNode) {
+		const node = $createMathHighlightNodeInline(serializedNode.text);
+		node.setFormat(serializedNode.format);
+		node.setDetail(serializedNode.detail);
+		node.setMode(serializedNode.mode);
+		node.setStyle(serializedNode.style);
+		return node;
 	}
 
 	exportDOM(editor) {
