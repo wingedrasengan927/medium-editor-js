@@ -5,6 +5,7 @@ import {
 	$isNodeSelection,
 	$isRangeSelection,
 	$setSelection,
+	$getNodeByKey,
 	SELECTION_CHANGE_COMMAND,
 	BLUR_COMMAND,
 	COMMAND_PRIORITY_HIGH,
@@ -125,6 +126,7 @@ function convertUnselectedMathHighlightNodes(editor, excludeKey = null) {
 	}
 }
 
+// Toggle between MathNode <-> MathHighlightNode when selection changes
 export function registerMathSelectionToggle(editor) {
 	return editor.registerCommand(
 		SELECTION_CHANGE_COMMAND,
@@ -159,6 +161,7 @@ export function registerMathSelectionToggle(editor) {
 	);
 }
 
+// Convert MathHighlightNodes to MathNodes on editor blur
 export function registerMathBlur(editor) {
 	return editor.registerCommand(
 		BLUR_COMMAND,
@@ -173,11 +176,41 @@ export function registerMathBlur(editor) {
 	);
 }
 
+// Select MathNode on click
+export function registerMathClick(editor) {
+	return editor.registerMutationListener(
+		MathNode,
+		(mutatedNodes) => {
+			for (const [nodeKey, mutation] of mutatedNodes) {
+				if (mutation === "created") {
+					const domElement = editor.getElementByKey(nodeKey);
+					if (domElement) {
+						domElement.addEventListener("click", () => {
+							editor.update(() => {
+								const node = $getNodeByKey(nodeKey);
+								if (editor.isEditable() && node) {
+									node.select();
+								}
+							});
+						});
+					}
+				}
+			}
+		},
+		{ skipInitialization: false },
+	);
+}
+
 export const MathExtension = defineExtension({
 	name: "math-extension",
 	nodes: () => [MathNode, MathHighlightNodeBlock, MathHighlightNodeInline],
 
 	register: (editor) => {
+		// Clean up any transient math highlight nodes at startup
+		editor.update(() => {
+			convertUnselectedMathHighlightNodes(editor);
+		});
+
 		return mergeRegister(
 			// Run MathJax typesetting whenever the mathnode is created or updated
 			editor.registerMutationListener(MathNode, (mutatedNodes) => {
@@ -195,6 +228,7 @@ export const MathExtension = defineExtension({
 
 			registerMathSelectionToggle(editor),
 			registerMathBlur(editor),
+			registerMathClick(editor),
 		);
 	},
 });
