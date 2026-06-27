@@ -17,10 +17,12 @@ export class BlockToolbar {
 		this.editor = editor;
 		this.gap = GAP;
 		this.isOpen = false;
+		this.targetNodeKey = null;
 		this.#buildDom();
 	}
 
-	show(x, y) {
+	show(x, y, targetNodeKey) {
+		this.targetNodeKey = targetNodeKey;
 		this.triggerElement.style.display = "flex";
 		const { width, height } = this.triggerElement.getBoundingClientRect();
 		this.triggerElement.style.left = `${x - width - this.gap}px`;
@@ -80,7 +82,10 @@ export class BlockToolbar {
 				if (typeof event.target.result === "string") {
 					this.editor.dispatchCommand(
 						INSERT_IMAGE_COMMAND,
-						event.target.result,
+						{
+							src: event.target.result,
+							targetNodeKey: this.targetNodeKey,
+						},
 					);
 				}
 			};
@@ -109,7 +114,10 @@ export class BlockToolbar {
 		popover.appendChild(dividerBtn);
 
 		const codeBtn = this.#createButton(codeSvg, "Insert code block", () => {
-			this.editor.dispatchCommand(INSERT_CODE_BLOCK_COMMAND, undefined);
+			this.editor.dispatchCommand(
+				INSERT_CODE_BLOCK_COMMAND,
+				{ targetNodeKey: this.targetNodeKey },
+			);
 			this.#closePopover();
 		});
 		popover.appendChild(codeBtn);

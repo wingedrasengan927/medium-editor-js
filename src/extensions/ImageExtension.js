@@ -16,6 +16,7 @@ import {
 	$setSelection,
 	$getNearestNodeFromDOMNode,
 	$nodesOfType,
+	$getNodeByKey,
 } from "lexical";
 import {
 	addClassNamesToElement,
@@ -26,7 +27,7 @@ import {
 	$isImageNode,
 	ImageNode,
 } from "../nodes/ImageNode.js";
-import { $getMutableSelection } from "./InlineToolbarExtension.js";
+
 
 export const INSERT_IMAGE_COMMAND = createCommand("INSERT_IMAGE_COMMAND");
 
@@ -35,24 +36,23 @@ function isImageFile(file) {
 }
 
 // Helper function for INSERT_IMAGE_COMMAND
-function $insertImageNode(src) {
-	const selection = $getMutableSelection();
-	if (!$isRangeSelection(selection)) {
-		return null;
+function $insertImageNode(payload) {
+	const { src, targetNodeKey } = payload;
+	const targetNode = $getNodeByKey(targetNodeKey);
+	if (targetNode) {
+		const imageNode = $createImageNode(src);
+		targetNode.replace(imageNode);
+
+		let nextNode = imageNode.getNextSibling();
+		if (!nextNode) {
+			nextNode = $createParagraphNode();
+			imageNode.insertAfter(nextNode);
+		}
+
+		imageNode.select();
+		return imageNode.getKey();
 	}
-
-	const imageNode = $createImageNode(src);
-	selection.insertNodes([imageNode]);
-
-	let nextNode =
-		imageNode.getNextSibling() || imageNode.getParent()?.getNextSibling();
-	if (!nextNode) {
-		nextNode = $createParagraphNode();
-		imageNode.insertAfter(nextNode);
-	}
-
-	imageNode.select();
-	return imageNode.getKey();
+	return null;
 }
 
 export const ImageExtension = defineExtension({
@@ -65,7 +65,7 @@ export const ImageExtension = defineExtension({
 			editor.registerCommand(
 				INSERT_IMAGE_COMMAND,
 				(payload) => {
-					if (typeof payload === "string") {
+					if (payload && typeof payload.src === "string") {
 						$insertImageNode(payload);
 						return true;
 					}
@@ -133,13 +133,17 @@ export const ImageExtension = defineExtension({
 
 					event.preventDefault();
 
+					const targetNodeKey = selection.anchor.getNode().getKey();
 					const imageFile = imageFiles[0];
 					const reader = new FileReader();
 					reader.onload = (e) => {
 						if (typeof e.target.result === "string") {
 							editor.dispatchCommand(
 								INSERT_IMAGE_COMMAND,
-								e.target.result,
+								{
+									src: e.target.result,
+									targetNodeKey,
+								},
 							);
 						}
 					};

@@ -4,6 +4,7 @@ import {
 	$getSelection,
 	$isRangeSelection,
 	$isParagraphNode,
+	$getNodeByKey,
 	COMMAND_PRIORITY_HIGH,
 	BLUR_COMMAND,
 	SELECTION_CHANGE_COMMAND,
@@ -13,7 +14,7 @@ import { CodeExtension, $createCodeNode } from "@lexical/code-core";
 import { ImageExtension } from "./ImageExtension.js";
 import { mergeRegister } from "@lexical/utils";
 import { BlockToolbar } from "../components/BlockToolbar/BlockToolbar.js";
-import { getSelectedNode, $getMutableSelection } from "./InlineToolbarExtension.js";
+import { getSelectedNode } from "./InlineToolbarExtension.js";
 
 export const INSERT_CODE_BLOCK_COMMAND = createCommand(
 	"INSERT_CODE_BLOCK_COMMAND",
@@ -29,13 +30,16 @@ export const BlockToolbarExtension = defineExtension({
 		const unregister = mergeRegister(
 			editor.registerCommand(
 				INSERT_CODE_BLOCK_COMMAND,
-				() => {
-					const selection = $getMutableSelection();
-					if ($isRangeSelection(selection)) {
-						const codeBlockNode = $createCodeNode();
-						selection.insertNodes([codeBlockNode]);
-						codeBlockNode.select();
-						return true;
+				(payload) => {
+					const targetNodeKey = payload?.targetNodeKey;
+					if (targetNodeKey) {
+						const targetNode = $getNodeByKey(targetNodeKey);
+						if (targetNode) {
+							const codeBlockNode = $createCodeNode();
+							targetNode.replace(codeBlockNode);
+							codeBlockNode.select();
+							return true;
+						}
 					}
 					return false;
 				},
@@ -64,10 +68,12 @@ export const BlockToolbarExtension = defineExtension({
 							toolbar.show(
 								rect.left,
 								rect.top + rect.height / 2 + window.scrollY,
+								node.getKey(),
 							);
 						}
 					} else {
 						toolbar.hide();
+						toolbar.targetNodeKey = null;
 					}
 
 					return false;
