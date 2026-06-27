@@ -9,8 +9,11 @@ import {
 	SELECTION_CHANGE_COMMAND,
 	BLUR_COMMAND,
 	COMMAND_PRIORITY_HIGH,
+	COMMAND_PRIORITY_LOW,
 	$createTextNode,
 	PASTE_COMMAND,
+	CLICK_COMMAND,
+	$getNearestNodeFromDOMNode,
 } from "lexical";
 import { $findMatchingParent } from "@lexical/utils";
 import { MathNode, $createMathNode, $isMathNode } from "../nodes/MathNode.js";
@@ -180,26 +183,24 @@ function registerMathBlur(editor) {
 
 // Select MathNode on click
 function registerMathClick(editor) {
-	return editor.registerMutationListener(
-		MathNode,
-		(mutatedNodes) => {
-			for (const [nodeKey, mutation] of mutatedNodes) {
-				if (mutation === "created") {
-					const domElement = editor.getElementByKey(nodeKey);
-					if (domElement) {
-						domElement.addEventListener("click", () => {
-							editor.update(() => {
-								const node = $getNodeByKey(nodeKey);
-								if (editor.isEditable() && node) {
-									node.select();
-								}
-							});
-						});
-					}
+	return editor.registerCommand(
+		CLICK_COMMAND,
+		(event) => {
+			if (!editor.isEditable()) {
+				return false;
+			}
+			const target = event.target;
+			if (target instanceof HTMLElement) {
+				const node = $getNearestNodeFromDOMNode(target);
+				if ($isMathNode(node)) {
+					event.preventDefault();
+					node.select();
+					return true;
 				}
 			}
+			return false;
 		},
-		{ skipInitialization: false },
+		COMMAND_PRIORITY_LOW,
 	);
 }
 
