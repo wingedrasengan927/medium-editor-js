@@ -102,7 +102,7 @@ function convertMathHighlightToMathNode(node) {
 }
 
 // Helper to identify the single active math highlight node where the cursor is
-function getActiveMathHighlightNode(selection) {
+export function getActiveMathHighlightNode(selection) {
 	if ($isRangeSelection(selection)) {
 		const anchorNode = selection.anchor.getNode();
 		return $findMatchingParent(

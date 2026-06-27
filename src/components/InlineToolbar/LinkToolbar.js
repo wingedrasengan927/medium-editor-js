@@ -1,6 +1,6 @@
 import { icons } from "./icons.js";
 import { OFFSCREEN_POSITION } from "./utils.js";
-import { TOGGLE_LINK_COMMAND } from "../../plugins/InlineToolbarPlugin.js";
+import { TOGGLE_LINK_COMMAND } from "../../extensions/InlineToolbarExtension.js";
 
 import "./styles/LinkToolbar.css";
 

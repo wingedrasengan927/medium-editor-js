@@ -5,6 +5,8 @@ import {
 	FORMAT_TEXT_COMMAND,
 } from "lexical";
 import { createDOMRange } from "@lexical/selection";
+import { $isHeadingNode, $isQuoteNode } from "@lexical/rich-text";
+import { $findMatchingParent } from "@lexical/utils";
 import {
 	computeInlineToolbarPosition,
 	getBoundingRectCoords,
@@ -15,12 +17,48 @@ import { LinkToolbar } from "./LinkToolbar.js";
 import {
 	TOGGLE_HEADING_COMMAND,
 	TOGGLE_QUOTE_COMMAND,
-	updateToolbarHeadingState,
-	updateToolbarQuoteState,
 	getLinkAtSelection,
-} from "../../plugins/InlineToolbarPlugin.js";
+} from "../../extensions/InlineToolbarExtension.js";
 
 import "./styles/Toolbar.css";
+
+function fetchTagIfHeadingNode(node) {
+	const headingNode = $findMatchingParent(node, $isHeadingNode);
+	return headingNode ? headingNode.getTag() : null;
+}
+
+function updateToolbarHeadingState(selection) {
+	const result = {
+		isHeadingOne: false,
+		isHeadingTwo: false,
+		isHeadingThree: false,
+	};
+
+	const nodes = selection.getNodes();
+	if (!nodes.length) return result;
+
+	const headingTag = fetchTagIfHeadingNode(nodes[0]);
+	if (!headingTag) return result;
+
+	const allMatch = nodes.every(
+		(node) => fetchTagIfHeadingNode(node) === headingTag,
+	);
+	if (!allMatch) return result;
+
+	const key = {
+		h1: "isHeadingOne",
+		h2: "isHeadingTwo",
+		h3: "isHeadingThree",
+	}[headingTag];
+	if (key) result[key] = true;
+	return result;
+}
+
+function updateToolbarQuoteState(selection) {
+	const nodes = selection.getNodes();
+	if (!nodes.length) return false;
+	return nodes.every((node) => $findMatchingParent(node, $isQuoteNode));
+}
 
 const TOP_OFFSET = 16;
 

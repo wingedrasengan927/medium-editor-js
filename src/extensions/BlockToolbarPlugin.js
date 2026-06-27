@@ -11,7 +11,7 @@ import {
 } from "lexical";
 import { mergeRegister } from "@lexical/utils";
 import { BlockToolbar } from "../components/BlockToolbar/BlockToolbar.js";
-import { getSelectedNode } from "./InlineToolbarPlugin.js";
+import { getSelectedNode } from "./InlineToolbarExtension.js";
 import {
 	HorizontalDividerNode,
 	$createHorizontalDividerNode,

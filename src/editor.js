@@ -15,6 +15,7 @@ import { CodeShikiExtension } from "@lexical/code-shiki";
 import { CodeMenuExtension } from "./extensions/CodeMenuExtension";
 import { MathExtension } from "./extensions/MathExtension";
 import { ImageExtension } from "./extensions/ImageExtension";
+import { InlineToolbarExtension } from "./extensions/InlineToolbarExtension";
 import defaultEditorTheme from "./editorTheme";
 
 import { $getRoot } from "lexical";
@@ -36,6 +37,7 @@ export default function initializeEditor(editorRef) {
 			CodeMenuExtension,
 			MathExtension,
 			ImageExtension,
+			InlineToolbarExtension,
 			MarkdownExtension,
 		],
 		theme: defaultEditorTheme,
