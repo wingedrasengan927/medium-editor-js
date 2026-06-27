@@ -84,7 +84,7 @@ export class BlockToolbar {
 						INSERT_IMAGE_COMMAND,
 						{
 							src: event.target.result,
-							targetNodeKey: this.targetNodeKey,
+							targetNodeKey: this.imageInsertTargetNodeKey,
 						},
 					);
 				}
@@ -95,6 +95,7 @@ export class BlockToolbar {
 		document.body.appendChild(fileInput);
 
 		const imageBtn = this.#createButton(photoSvg, "Insert image", () => {
+			this.imageInsertTargetNodeKey = this.targetNodeKey;
 			this.#closePopover();
 			fileInput.click();
 		});

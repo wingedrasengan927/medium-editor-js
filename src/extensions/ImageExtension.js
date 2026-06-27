@@ -42,13 +42,7 @@ function $insertImageNode(payload) {
 	if (targetNode) {
 		const imageNode = $createImageNode(src);
 		targetNode.replace(imageNode);
-
-		let nextNode = imageNode.getNextSibling();
-		if (!nextNode) {
-			nextNode = $createParagraphNode();
-			imageNode.insertAfter(nextNode);
-		}
-
+		
 		imageNode.select();
 		return imageNode.getKey();
 	}
@@ -67,6 +61,7 @@ export const ImageExtension = defineExtension({
 				(payload) => {
 					if (payload && typeof payload.src === "string") {
 						$insertImageNode(payload);
+						editor.focus();
 						return true;
 					}
 					return false;
