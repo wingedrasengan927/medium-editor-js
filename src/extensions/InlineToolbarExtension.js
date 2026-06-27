@@ -2,6 +2,7 @@ import {
 	defineExtension,
 	createCommand,
 	$getSelection,
+	$getPreviousSelection,
 	$isRangeSelection,
 	$createParagraphNode,
 	$setSelection,
@@ -23,6 +24,19 @@ import { $isCodeNode } from "@lexical/code-core";
 import { $isMathNode } from "../nodes/MathNode.js";
 import { getActiveMathHighlightNode } from "./MathExtension.js";
 import { InlineToolbar } from "../components/InlineToolbar/InlineToolbar.js";
+
+// Safely retrieves the active selection or falls back to a cloned and restored previous selection.
+export function $getMutableSelection() {
+	let selection = $getSelection();
+	if (selection === null) {
+		const prevSelection = $getPreviousSelection();
+		if (prevSelection !== null) {
+			selection = prevSelection.clone();
+			$setSelection(selection);
+		}
+	}
+	return selection;
+}
 
 export const TOGGLE_HEADING_COMMAND = createCommand("TOGGLE_HEADING_COMMAND");
 export const TOGGLE_QUOTE_COMMAND = createCommand("TOGGLE_QUOTE_COMMAND");

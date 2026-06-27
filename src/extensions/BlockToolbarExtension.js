@@ -2,10 +2,8 @@ import {
 	defineExtension,
 	createCommand,
 	$getSelection,
-	$getPreviousSelection,
 	$isRangeSelection,
 	$isParagraphNode,
-	$setSelection,
 	COMMAND_PRIORITY_HIGH,
 	BLUR_COMMAND,
 	SELECTION_CHANGE_COMMAND,
@@ -15,20 +13,7 @@ import { CodeExtension, $createCodeNode } from "@lexical/code-core";
 import { ImageExtension } from "./ImageExtension.js";
 import { mergeRegister } from "@lexical/utils";
 import { BlockToolbar } from "../components/BlockToolbar/BlockToolbar.js";
-import { getSelectedNode } from "./InlineToolbarExtension.js";
-
-// Safely retrieves the active selection or falls back to a cloned and restored previous selection.
-export function $getMutableSelection() {
-	let selection = $getSelection();
-	if (selection === null) {
-		const prevSelection = $getPreviousSelection();
-		if (prevSelection !== null) {
-			selection = prevSelection.clone();
-			$setSelection(selection);
-		}
-	}
-	return selection;
-}
+import { getSelectedNode, $getMutableSelection } from "./InlineToolbarExtension.js";
 
 export const INSERT_CODE_BLOCK_COMMAND = createCommand(
 	"INSERT_CODE_BLOCK_COMMAND",

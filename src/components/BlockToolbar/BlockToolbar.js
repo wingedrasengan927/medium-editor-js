@@ -89,14 +89,10 @@ export class BlockToolbar {
 		});
 		document.body.appendChild(fileInput);
 
-		const imageBtn = this.#createButton(
-			photoSvg,
-			"Insert image",
-			() => {
-				this.#closePopover();
-				fileInput.click();
-			},
-		);
+		const imageBtn = this.#createButton(photoSvg, "Insert image", () => {
+			this.#closePopover();
+			fileInput.click();
+		});
 		popover.appendChild(imageBtn);
 
 		const dividerBtn = this.#createButton(

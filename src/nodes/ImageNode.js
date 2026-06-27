@@ -61,6 +61,10 @@ export class ImageNode extends DecoratorNode {
 		return { element };
 	}
 
+	updateDOM() {
+		return true;
+	}
+
 	select() {
 		const nodeSelection = $createNodeSelection();
 		nodeSelection.add(this.getKey());

@@ -26,7 +26,7 @@ import {
 	$isImageNode,
 	ImageNode,
 } from "../nodes/ImageNode.js";
-import { $getMutableSelection } from "./BlockToolbarExtension.js";
+import { $getMutableSelection } from "./InlineToolbarExtension.js";
 
 export const INSERT_IMAGE_COMMAND = createCommand("INSERT_IMAGE_COMMAND");
 
