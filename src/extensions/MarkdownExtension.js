@@ -7,6 +7,7 @@ import {
 	MATH_BLOCK_MULTILINE_TRANSFORMER,
 	MATH_HIGHLIGHT_BLOCK_TRANSFORMER,
 } from "../transformers/MathTransformer";
+import { IMAGE_TRANSFORMER } from "../transformers/ImageTransformer";
 
 export const MarkdownExtension = defineExtension({
 	name: "MarkdownExtension",
@@ -17,6 +18,7 @@ export const MarkdownExtension = defineExtension({
 			MATH_BLOCK_SINGLE_LINE_TRANSFORMER,
 			MATH_BLOCK_MULTILINE_TRANSFORMER,
 			MATH_HIGHLIGHT_BLOCK_TRANSFORMER,
+			IMAGE_TRANSFORMER,
 			...TRANSFORMERS,
 		]),
 });
