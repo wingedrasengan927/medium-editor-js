@@ -215,24 +215,28 @@ export class InlineToolbar {
 		setAttr(this.linkBtn, "data-disabled", isHeadingOne);
 	}
 
+	#getSelectionCoords(selection) {
+		if (!$isRangeSelection(selection)) return null;
+
+		const [anchorPoint, focusPoint] = selection.getStartEndPoints();
+		const anchorNode = anchorPoint.getNode();
+		const focusNode = focusPoint.getNode();
+		const [anchorOffset, focusOffset] = $getCharacterOffsets(selection);
+		const range = createDOMRange(
+			this.editor,
+			anchorNode,
+			anchorOffset,
+			focusNode,
+			focusOffset,
+		);
+
+		return getBoundingRectCoords(range);
+	}
+
 	#updatePositionFromSelection() {
 		this.editor.read(() => {
 			const selection = $getSelection();
-			if (!$isRangeSelection(selection)) return;
-
-			const [anchorPoint, focusPoint] = selection.getStartEndPoints();
-			const anchorNode = anchorPoint.getNode();
-			const focusNode = focusPoint.getNode();
-			const [anchorOffset, focusOffset] = $getCharacterOffsets(selection);
-			const range = createDOMRange(
-				this.editor,
-				anchorNode,
-				anchorOffset,
-				focusNode,
-				focusOffset,
-			);
-
-			const coords = getBoundingRectCoords(range);
+			const coords = this.#getSelectionCoords(selection);
 			if (!coords) return;
 
 			const target = this.isLinkMode
@@ -251,10 +255,27 @@ export class InlineToolbar {
 	#enterLinkMode() {
 		this.isLinkMode = true;
 		const width = this.element.getBoundingClientRect().width;
+
+		let coords = null;
+		this.editor.read(() => {
+			const selection = $getSelection();
+			coords = this.#getSelectionCoords(selection);
+		});
+
 		this.element.style.display = "none";
 		this.element.classList.remove("visible");
 		this.linkToolbar.show(this.existingLinkURL, width);
-		this.#updatePositionFromSelection();
+
+		if (coords) {
+			const target = this.linkToolbar.element;
+			const pos = computeInlineToolbarPosition(
+				coords,
+				target,
+				TOP_OFFSET,
+			);
+			target.style.top = `${pos.y}px`;
+			target.style.left = `${pos.x}px`;
+		}
 	}
 
 	#exitLinkMode() {

@@ -121,13 +121,6 @@ export function registerBlockToolbarPlugin(
 			},
 			COMMAND_PRIORITY_HIGH,
 		),
-
-		editor.registerEditableListener((editable) => {
-			if (!editable) {
-				selectionCoords = null;
-				toolbar.hide();
-			}
-		}),
 	);
 
 	return () => {

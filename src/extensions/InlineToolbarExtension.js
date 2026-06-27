@@ -142,6 +142,18 @@ export const InlineToolbarExtension = defineExtension({
 						toolbar.hide();
 						return false;
 					}
+
+					// Don't hide the inline toolbar when link toolbar is in focus
+					const activeElement = document.activeElement;
+					const linkToolbarElement = toolbar.linkToolbar?.element;
+					if (
+						linkToolbarElement &&
+						(linkToolbarElement === activeElement ||
+							linkToolbarElement.contains(activeElement))
+					) {
+						return false;
+					}
+
 					const selection = $getSelection();
 					if (!$isRangeSelection(selection) || selection.isCollapsed()) {
 						toolbar.hide();
