@@ -3,8 +3,8 @@ import lineDashedSvg from "@tabler/icons/outline/line-dashed.svg?raw";
 import photoSvg from "@tabler/icons/outline/photo.svg?raw";
 import codeSvg from "@tabler/icons/outline/code.svg?raw";
 import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/extension";
-import { INSERT_IMAGE_COMMAND } from "../../extensions/ImageExtension.js";
-import { INSERT_CODE_BLOCK_COMMAND } from "../../extensions/BlockToolbarExtension.js";
+import { INSERT_IMAGE_AT_TARGET_COMMAND } from "../../extensions/ImageExtension.js";
+import { INSERT_CODE_BLOCK_AT_TARGET_COMMAND } from "../../extensions/BlockToolbarExtension.js";
 import "./styles/Popover.css";
 
 const OFFSCREEN = -1000;
@@ -17,17 +17,20 @@ export class BlockToolbar {
 		this.editor = editor;
 		this.gap = GAP;
 		this.isOpen = false;
-		this.targetNodeKey = null;
+		this.targetNodeKeyTrigger = null; // tracks the position where the  +  trigger button is shown
+		this.targetNodeKeyPopover = null; // tracks the node key where the popover was actively opened
 		this.#buildDom();
 	}
 
+	// open and position the plus button trigger
 	show(x, y, targetNodeKey) {
-		this.targetNodeKey = targetNodeKey;
+		this.targetNodeKeyTrigger = targetNodeKey;
 		this.triggerElement.style.display = "flex";
 		const { width, height } = this.triggerElement.getBoundingClientRect();
 		this.triggerElement.style.left = `${x - width - this.gap}px`;
 		this.triggerElement.style.top = `${y - height / 2}px`;
 
+		// isOpen: controls the popover (entire container with all the buttons) state
 		if (this.isOpen) {
 			this.#positionPopover();
 		}
@@ -50,13 +53,18 @@ export class BlockToolbar {
 	}
 
 	#buildDom() {
+		// Build and attach the trigger element
 		const trigger = document.createElement("button");
 		trigger.type = "button";
 		trigger.className = "block-toolbar-trigger";
 		trigger.setAttribute("aria-label", "Block toolbar trigger");
 		trigger.innerHTML = plusSvg;
 		trigger.style.cssText = `position: absolute; top: ${OFFSCREEN}px; left: ${OFFSCREEN}px; display: none;`;
+
+		// Prevent the trigger button from stealing focus from the editor when clicked
 		trigger.addEventListener("mousedown", (e) => e.preventDefault());
+
+		// Toggle the popover visibility when clicking the trigger button
 		trigger.addEventListener("click", () => {
 			if (this.isOpen) {
 				this.#closePopover();
@@ -65,37 +73,18 @@ export class BlockToolbar {
 			}
 		});
 
+		// create the popover element
 		const popover = document.createElement("div");
 		popover.className = "block-toolbar-popover";
 		popover.style.cssText = `position: absolute; top: ${OFFSCREEN}px; left: ${OFFSCREEN}px; display: none;`;
 
-		// File input for image upload
-		const fileInput = document.createElement("input");
-		fileInput.type = "file";
-		fileInput.accept = "image/*";
-		fileInput.style.display = "none";
-		fileInput.addEventListener("change", (e) => {
-			const file = e.target.files[0];
-			if (!file) return;
-			const reader = new FileReader();
-			reader.onload = (event) => {
-				if (typeof event.target.result === "string") {
-					this.editor.dispatchCommand(
-						INSERT_IMAGE_COMMAND,
-						{
-							src: event.target.result,
-							targetNodeKey: this.imageInsertTargetNodeKey,
-						},
-					);
-				}
-			};
-			reader.readAsDataURL(file);
-			fileInput.value = ""; // Reset input
-		});
+		// Create hidden file input for image uploads
+		const fileInput = this.#createFileInput();
 		document.body.appendChild(fileInput);
 
 		const imageBtn = this.#createButton(photoSvg, "Insert image", () => {
-			this.imageInsertTargetNodeKey = this.targetNodeKey;
+			// Persist the popover's target node key for the asynchronous image insertion
+			fileInput.dataset.targetNodeKey = this.targetNodeKeyPopover;
 			this.#closePopover();
 			fileInput.click();
 		});
@@ -116,8 +105,8 @@ export class BlockToolbar {
 
 		const codeBtn = this.#createButton(codeSvg, "Insert code block", () => {
 			this.editor.dispatchCommand(
-				INSERT_CODE_BLOCK_COMMAND,
-				{ targetNodeKey: this.targetNodeKey },
+				INSERT_CODE_BLOCK_AT_TARGET_COMMAND,
+				{ targetNodeKey: this.targetNodeKeyPopover },
 			);
 			this.#closePopover();
 		});
@@ -126,6 +115,8 @@ export class BlockToolbar {
 		document.body.appendChild(trigger);
 		document.body.appendChild(popover);
 
+		// popover: Entire container with all the buttons
+		// trigger: '+' Button
 		this.triggerElement = trigger;
 		this.popoverElement = popover;
 	}
@@ -141,8 +132,36 @@ export class BlockToolbar {
 		return btn;
 	}
 
+	#createFileInput() {
+		const fileInput = document.createElement("input");
+		fileInput.type = "file";
+		fileInput.accept = "image/*";
+		fileInput.style.display = "none";
+		fileInput.addEventListener("change", (e) => {
+			const file = e.target.files[0];
+			if (!file) return;
+			const targetNodeKey = fileInput.dataset.targetNodeKey;
+			const reader = new FileReader();
+			reader.onload = (event) => {
+				if (typeof event.target.result === "string") {
+					this.editor.dispatchCommand(
+						INSERT_IMAGE_AT_TARGET_COMMAND,
+						{
+							src: event.target.result,
+							targetNodeKey,
+						},
+					);
+				}
+			};
+			reader.readAsDataURL(file);
+			fileInput.value = ""; // Reset input
+		});
+		return fileInput;
+	}
+
 	#openPopover() {
 		this.isOpen = true;
+		this.targetNodeKeyPopover = this.targetNodeKeyTrigger;
 		this.triggerElement.setAttribute("data-open", "");
 		this.popoverElement.style.display = "flex";
 		this.#positionPopover();
@@ -151,6 +170,7 @@ export class BlockToolbar {
 			this.popoverElement.classList.add("visible");
 		});
 
+		// Register an event listener when the popover is opened to close it on outside click. 
 		this.#outsideClickHandler = (e) => {
 			if (
 				!this.triggerElement.contains(e.target) &&
@@ -165,15 +185,18 @@ export class BlockToolbar {
 	#closePopover() {
 		if (!this.isOpen) return;
 		this.isOpen = false;
+		this.targetNodeKeyPopover = null;
 		this.triggerElement.removeAttribute("data-open");
 		this.popoverElement.classList.remove("visible");
 
+		// Add setTimeout for fade-out animation
 		setTimeout(() => {
 			if (!this.isOpen) {
 				this.popoverElement.style.display = "none";
 			}
 		}, 200);
 
+		// Destroy the listener on close
 		if (this.#outsideClickHandler) {
 			document.removeEventListener(
 				"mousedown",

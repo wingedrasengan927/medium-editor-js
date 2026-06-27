@@ -16,8 +16,8 @@ import { mergeRegister } from "@lexical/utils";
 import { BlockToolbar } from "../components/BlockToolbar/BlockToolbar.js";
 import { getSelectedNode } from "./InlineToolbarExtension.js";
 
-export const INSERT_CODE_BLOCK_COMMAND = createCommand(
-	"INSERT_CODE_BLOCK_COMMAND",
+export const INSERT_CODE_BLOCK_AT_TARGET_COMMAND = createCommand(
+	"INSERT_CODE_BLOCK_AT_TARGET_COMMAND",
 );
 
 export const BlockToolbarExtension = defineExtension({
@@ -29,7 +29,7 @@ export const BlockToolbarExtension = defineExtension({
 
 		const unregister = mergeRegister(
 			editor.registerCommand(
-				INSERT_CODE_BLOCK_COMMAND,
+				INSERT_CODE_BLOCK_AT_TARGET_COMMAND,
 				(payload) => {
 					const targetNodeKey = payload?.targetNodeKey;
 					if (targetNodeKey) {
@@ -73,7 +73,7 @@ export const BlockToolbarExtension = defineExtension({
 						}
 					} else {
 						toolbar.hide();
-						toolbar.targetNodeKey = null;
+						toolbar.targetNodeKeyTrigger = null;
 					}
 
 					return false;

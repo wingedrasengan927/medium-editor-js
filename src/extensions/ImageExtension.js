@@ -29,13 +29,13 @@ import {
 } from "../nodes/ImageNode.js";
 
 
-export const INSERT_IMAGE_COMMAND = createCommand("INSERT_IMAGE_COMMAND");
+export const INSERT_IMAGE_AT_TARGET_COMMAND = createCommand("INSERT_IMAGE_AT_TARGET_COMMAND");
 
 function isImageFile(file) {
 	return file && file.type && file.type.startsWith("image/");
 }
 
-// Helper function for INSERT_IMAGE_COMMAND
+// Helper function for INSERT_IMAGE_AT_TARGET_COMMAND
 function $insertImageNode(payload) {
 	const { src, targetNodeKey } = payload;
 	const targetNode = $getNodeByKey(targetNodeKey);
@@ -55,9 +55,9 @@ export const ImageExtension = defineExtension({
 	register: (editor) => {
 		return mergeRegister(
 
-			// Register INSERT_IMAGE_COMMAND
+			// Register INSERT_IMAGE_AT_TARGET_COMMAND
 			editor.registerCommand(
-				INSERT_IMAGE_COMMAND,
+				INSERT_IMAGE_AT_TARGET_COMMAND,
 				(payload) => {
 					if (payload && typeof payload.src === "string") {
 						$insertImageNode(payload);
@@ -134,7 +134,7 @@ export const ImageExtension = defineExtension({
 					reader.onload = (e) => {
 						if (typeof e.target.result === "string") {
 							editor.dispatchCommand(
-								INSERT_IMAGE_COMMAND,
+								INSERT_IMAGE_AT_TARGET_COMMAND,
 								{
 									src: e.target.result,
 									targetNodeKey,
