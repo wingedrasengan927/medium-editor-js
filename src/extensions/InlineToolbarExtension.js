@@ -4,6 +4,7 @@ import {
 	$getSelection,
 	$isRangeSelection,
 	$createParagraphNode,
+	$setSelection,
 	COMMAND_PRIORITY_HIGH,
 	COMMAND_PRIORITY_LOW,
 	CLICK_COMMAND,
@@ -95,6 +96,10 @@ export const InlineToolbarExtension = defineExtension({
 			editor.registerCommand(
 				TOGGLE_LINK_COMMAND,
 				(linkURL) => {
+					if (toolbar.lastSelection) {
+						$setSelection(toolbar.lastSelection);
+						toolbar.lastSelection = null;
+					}
 					$toggleLink(linkURL);
 					return true;
 				},

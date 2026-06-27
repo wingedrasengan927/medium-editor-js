@@ -79,6 +79,7 @@ export class InlineToolbar {
 		this.existingLinkURL = "";
 		this.isLinkMode = false;
 		this.isVisible = false;
+		this.lastSelection = null;
 
 		this.#buildDom();
 
@@ -259,6 +260,9 @@ export class InlineToolbar {
 		let coords = null;
 		this.editor.read(() => {
 			const selection = $getSelection();
+			if ($isRangeSelection(selection)) {
+				this.lastSelection = selection.clone();
+			}
 			coords = this.#getSelectionCoords(selection);
 		});
 
@@ -280,6 +284,7 @@ export class InlineToolbar {
 
 	#exitLinkMode() {
 		this.isLinkMode = false;
+		this.lastSelection = null;
 		this.linkToolbar.hide();
 	}
 }

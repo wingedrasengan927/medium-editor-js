@@ -31,10 +31,12 @@ export class LinkToolbar {
 		const value = this.input.value.trim();
 		const url = value === "" ? null : value;
 		this.editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
+		this.editor.focus();
 		this.onClose?.();
 	}
 
 	#cancel() {
+		this.editor.focus();
 		this.onClose?.();
 	}
 
