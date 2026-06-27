@@ -3,7 +3,7 @@ import lineDashedSvg from "@tabler/icons/outline/line-dashed.svg?raw";
 import photoSvg from "@tabler/icons/outline/photo.svg?raw";
 import codeSvg from "@tabler/icons/outline/code.svg?raw";
 import { INSERT_HORIZONTAL_DIVIDER_COMMAND } from "../../plugins/BlockToolbarPlugin.js";
-import { INSERT_IMAGE_COMMAND } from "../../plugins/ImagePlugin.js";
+import { INSERT_IMAGE_COMMAND } from "../../extensions/ImageExtension.js";
 import { INSERT_CODE_BLOCK_COMMAND } from "../../plugins/CodePlugin.js";
 import "./styles/Popover.css";
 

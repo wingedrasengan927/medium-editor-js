@@ -16,6 +16,7 @@ const defaultEditorTheme = {
 	link: "medium-link",
 	hr: "medium-divider",
 	img: "medium-img",
+	imgSelected: "selected",
 	list: {
 		nested: {
 			listitem: "medium-nested-listitem",

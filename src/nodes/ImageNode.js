@@ -3,24 +3,23 @@ import {
 	$applyNodeReplacement,
 	$createNodeSelection,
 	$setSelection,
+	createState,
+	$getState,
+	$setState,
+	$create,
 } from "lexical";
 import { addClassNamesToElement } from "@lexical/utils";
 
+const srcState = createState("src", {
+	parse: (v) => (typeof v === "string" ? v : ""),
+});
+
 export class ImageNode extends DecoratorNode {
-	static getType() {
-		return "image";
-	}
-
-	static clone(node) {
-		const clone = new ImageNode(node.__src, node.__key);
-		clone.__attributes = { ...node.__attributes };
-		return clone;
-	}
-
-	constructor(src, key) {
-		super(key);
-		this.__src = src;
-		this.__attributes = {};
+	$config() {
+		return this.config("image", {
+			extends: DecoratorNode,
+			stateConfigs: [{ flat: true, stateConfig: srcState }],
+		});
 	}
 
 	createDOM(config) {
@@ -30,21 +29,8 @@ export class ImageNode extends DecoratorNode {
 		const imgElement = document.createElement("img");
 		imgElement.setAttribute("src", this.getSrc());
 
-		// Apply stored attributes
-		for (const [name, value] of Object.entries(this.__attributes)) {
-			imgElement.setAttribute(name, value);
-		}
-
 		element.appendChild(imgElement);
 		return element;
-	}
-
-	updateDOM(prevNode, dom, config) {
-		const imgElement = dom.querySelector("img");
-		if (imgElement && prevNode.__src !== this.__src) {
-			imgElement.setAttribute("src", this.__src);
-		}
-		return false;
 	}
 
 	static importDOM() {
@@ -71,27 +57,8 @@ export class ImageNode extends DecoratorNode {
 		const imgElement = document.createElement("img");
 		imgElement.setAttribute("src", this.getSrc());
 
-		// Apply stored attributes
-		for (const [name, value] of Object.entries(this.__attributes)) {
-			imgElement.setAttribute(name, value);
-		}
-
 		element.appendChild(imgElement);
 		return { element };
-	}
-
-	static importJSON(serializedNode) {
-		const { src } = serializedNode;
-		const node = $createImageNode(src);
-		return node;
-	}
-
-	exportJSON() {
-		return {
-			...super.exportJSON(),
-			src: this.getSrc(),
-			type: "image",
-		};
 	}
 
 	select() {
@@ -102,12 +69,11 @@ export class ImageNode extends DecoratorNode {
 	}
 
 	getSrc() {
-		return this.__src;
+		return $getState(this, srcState);
 	}
 
 	setSrc(src) {
-		const writable = this.getWritable();
-		writable.__src = src;
+		$setState(this, srcState, src);
 	}
 
 	getTextContent() {
@@ -129,20 +95,15 @@ function $convertImageElement(element) {
 		const imgElement = element.querySelector("img");
 		const src = imgElement.getAttribute("src");
 		node = $createImageNode(src);
-
-		// Store attributes
-		for (const attr of imgElement.attributes) {
-			if (attr.name !== "src") {
-				node.__attributes[attr.name] = attr.value;
-			}
-		}
 	}
 
 	return { node };
 }
 
 export function $createImageNode(src) {
-	return $applyNodeReplacement(new ImageNode(src));
+	const node = $create(ImageNode);
+	$setState(node, srcState, src);
+	return $applyNodeReplacement(node);
 }
 
 export function $isImageNode(node) {
