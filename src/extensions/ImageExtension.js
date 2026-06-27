@@ -26,6 +26,7 @@ import {
 	$isImageNode,
 	ImageNode,
 } from "../nodes/ImageNode.js";
+import { $getMutableSelection } from "./BlockToolbarExtension.js";
 
 export const INSERT_IMAGE_COMMAND = createCommand("INSERT_IMAGE_COMMAND");
 
@@ -35,7 +36,7 @@ function isImageFile(file) {
 
 // Helper function for INSERT_IMAGE_COMMAND
 function $insertImageNode(src) {
-	const selection = $getPreviousSelection() || $getSelection();
+	const selection = $getMutableSelection();
 	if (!$isRangeSelection(selection)) {
 		return null;
 	}

@@ -2,20 +2,20 @@ import plusSvg from "@tabler/icons/outline/plus.svg?raw";
 import lineDashedSvg from "@tabler/icons/outline/line-dashed.svg?raw";
 import photoSvg from "@tabler/icons/outline/photo.svg?raw";
 import codeSvg from "@tabler/icons/outline/code.svg?raw";
-import { INSERT_HORIZONTAL_DIVIDER_COMMAND } from "../../plugins/BlockToolbarPlugin.js";
+import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/extension";
 import { INSERT_IMAGE_COMMAND } from "../../extensions/ImageExtension.js";
-import { INSERT_CODE_BLOCK_COMMAND } from "../../plugins/CodePlugin.js";
+import { INSERT_CODE_BLOCK_COMMAND } from "../../extensions/BlockToolbarExtension.js";
 import "./styles/Popover.css";
 
 const OFFSCREEN = -1000;
+const GAP = 8;
 
 export class BlockToolbar {
 	#outsideClickHandler = null;
 
-	constructor(editor, gap = 8, disableImage = false) {
+	constructor(editor) {
 		this.editor = editor;
-		this.gap = gap;
-		this.disableImage = disableImage;
+		this.gap = GAP;
 		this.isOpen = false;
 		this.#buildDom();
 	}
@@ -67,46 +67,44 @@ export class BlockToolbar {
 		popover.className = "block-toolbar-popover";
 		popover.style.cssText = `position: absolute; top: ${OFFSCREEN}px; left: ${OFFSCREEN}px; display: none;`;
 
-		if (!this.disableImage) {
-			// File input for image upload
-			const fileInput = document.createElement("input");
-			fileInput.type = "file";
-			fileInput.accept = "image/*";
-			fileInput.style.display = "none";
-			fileInput.addEventListener("change", (e) => {
-				const file = e.target.files[0];
-				if (!file) return;
-				const reader = new FileReader();
-				reader.onload = (event) => {
-					if (typeof event.target.result === "string") {
-						this.editor.dispatchCommand(
-							INSERT_IMAGE_COMMAND,
-							event.target.result,
-						);
-					}
-				};
-				reader.readAsDataURL(file);
-				fileInput.value = ""; // Reset input
-			});
-			document.body.appendChild(fileInput);
+		// File input for image upload
+		const fileInput = document.createElement("input");
+		fileInput.type = "file";
+		fileInput.accept = "image/*";
+		fileInput.style.display = "none";
+		fileInput.addEventListener("change", (e) => {
+			const file = e.target.files[0];
+			if (!file) return;
+			const reader = new FileReader();
+			reader.onload = (event) => {
+				if (typeof event.target.result === "string") {
+					this.editor.dispatchCommand(
+						INSERT_IMAGE_COMMAND,
+						event.target.result,
+					);
+				}
+			};
+			reader.readAsDataURL(file);
+			fileInput.value = ""; // Reset input
+		});
+		document.body.appendChild(fileInput);
 
-			const imageBtn = this.#createButton(
-				photoSvg,
-				"Insert image",
-				() => {
-					this.#closePopover();
-					fileInput.click();
-				},
-			);
-			popover.appendChild(imageBtn);
-		}
+		const imageBtn = this.#createButton(
+			photoSvg,
+			"Insert image",
+			() => {
+				this.#closePopover();
+				fileInput.click();
+			},
+		);
+		popover.appendChild(imageBtn);
 
 		const dividerBtn = this.#createButton(
 			lineDashedSvg,
 			"Insert horizontal divider",
 			() => {
 				this.editor.dispatchCommand(
-					INSERT_HORIZONTAL_DIVIDER_COMMAND,
+					INSERT_HORIZONTAL_RULE_COMMAND,
 					undefined,
 				);
 				this.#closePopover();

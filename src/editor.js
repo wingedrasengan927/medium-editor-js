@@ -16,6 +16,7 @@ import { CodeMenuExtension } from "./extensions/CodeMenuExtension";
 import { MathExtension } from "./extensions/MathExtension";
 import { ImageExtension } from "./extensions/ImageExtension";
 import { InlineToolbarExtension } from "./extensions/InlineToolbarExtension";
+import { BlockToolbarExtension } from "./extensions/BlockToolbarExtension";
 import defaultEditorTheme from "./editorTheme";
 
 import { $getRoot } from "lexical";
@@ -38,6 +39,7 @@ export default function initializeEditor(editorRef) {
 			MathExtension,
 			ImageExtension,
 			InlineToolbarExtension,
+			BlockToolbarExtension,
 			MarkdownExtension,
 		],
 		theme: defaultEditorTheme,
