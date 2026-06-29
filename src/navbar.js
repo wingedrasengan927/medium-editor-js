@@ -51,7 +51,7 @@ export function setupNavbar(editor) {
 		pasteMarkdownBtn.addEventListener("click", async () => {
 			try {
 				const markdown = await navigator.clipboard.readText();
-				// Clean CRLF and CR line endings to prevent matching issues
+				// Sanitize linebreaks
 				const sanitizedMarkdown = markdown.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 				editor.update(() => {
 					// Note: This replaces all existing editor content
