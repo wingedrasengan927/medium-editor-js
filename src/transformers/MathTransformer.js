@@ -58,7 +58,7 @@ export const MATH_BLOCK_MULTILINE_TRANSFORMER = {
 		optional: false,
 		regExp: /^\$\$/,
 	},
-	regExpStart: /^(\$\$)$/,
+	regExpStart: /^(\$\$)\s*$/,
 	replace: (rootNode, children, startMatch, endMatch, linesInBetween, isImport) => {
 		if (isImport && linesInBetween) {
 			const equation = linesInBetween.join("\n").trim();
