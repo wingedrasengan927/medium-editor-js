@@ -171,10 +171,8 @@ function registerMathBlur(editor) {
 	return editor.registerCommand(
 		BLUR_COMMAND,
 		() => {
-			editor.update(() => {
-				convertUnselectedMathHighlightNodes(editor);
-				$setSelection(null);
-			});
+			convertUnselectedMathHighlightNodes(editor);
+			$setSelection(null);
 			return false;
 		},
 		COMMAND_PRIORITY_HIGH,
