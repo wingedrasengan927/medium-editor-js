@@ -1,6 +1,7 @@
 import { $generateHtmlFromNodes } from "@lexical/html";
-import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
+import { $convertToMarkdownString, $convertFromMarkdownString, TRANSFORMERS } from "@lexical/markdown";
 import copySvg from "@tabler/icons/outline/copy.svg?raw";
+import clipboardSvg from "@tabler/icons/outline/clipboard.svg?raw";
 import { HR_TRANSFORMER } from "./transformers/HRTransformer";
 import {
 	MATH_INLINE_TRANSFORMER,
@@ -36,12 +37,36 @@ export function setupNavbar(editor) {
 					MATH_INLINE_TRANSFORMER,
 					MATH_BLOCK_SINGLE_LINE_TRANSFORMER,
 					MATH_BLOCK_MULTILINE_TRANSFORMER,
-					MATH_HIGHLIGHT_BLOCK_TRANSFORMER,
 					IMAGE_TRANSFORMER,
 					...TRANSFORMERS,
 				]);
 				copyToClipboard(markdown);
 			});
+		});
+	}
+
+	const pasteMarkdownBtn = document.getElementById("paste-markdown-btn");
+	if (pasteMarkdownBtn) {
+		pasteMarkdownBtn.innerHTML = `${clipboardSvg}<span>Paste MD</span>`;
+		pasteMarkdownBtn.addEventListener("click", async () => {
+			try {
+				const markdown = await navigator.clipboard.readText();
+				// Clean CRLF and CR line endings to prevent matching issues
+				const sanitizedMarkdown = markdown.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+				editor.update(() => {
+					// Note: This replaces all existing editor content
+					$convertFromMarkdownString(sanitizedMarkdown, [
+						HR_TRANSFORMER,
+						MATH_INLINE_TRANSFORMER,
+						MATH_BLOCK_SINGLE_LINE_TRANSFORMER,
+						MATH_BLOCK_MULTILINE_TRANSFORMER,
+						IMAGE_TRANSFORMER,
+						...TRANSFORMERS,
+					]);
+				});
+			} catch (err) {
+				console.error("Failed to read clipboard contents: ", err);
+			}
 		});
 	}
 
