@@ -5,12 +5,19 @@ import {
 } from "@lexical/extension";
 import { HistoryExtension } from "@lexical/history";
 import { RichTextExtension } from "@lexical/rich-text";
-import { HorizontalRuleExtension } from "@lexical/extension";
+import {
+	HorizontalRuleExtension,
+	AutoFocusExtension,
+	ClickAfterLastBlockExtension,
+	SelectBlockExtension,
+	SelectionAlwaysOnDisplayExtension,
+	configExtension,
+} from "@lexical/extension";
 import ModifyFirstHeadingExtension from "./extensions/ModifyFirstHeadingExtension";
 import { MarkdownExtension } from "./extensions/MarkdownExtension";
 import { ListExtension } from "@lexical/list";
 import { LinkExtension } from "@lexical/link";
-import { CodeExtension } from "@lexical/code-core";
+import { CodeExtension, CodeIndentExtension } from "@lexical/code-core";
 import { CodeShikiExtension } from "@lexical/code-shiki";
 import { CodeMenuExtension } from "./extensions/CodeMenuExtension";
 import { MathExtension } from "./extensions/MathExtension";
@@ -18,6 +25,10 @@ import { ImageExtension } from "./extensions/ImageExtension";
 import { InlineToolbarExtension } from "./extensions/InlineToolbarExtension";
 import { BlockToolbarExtension } from "./extensions/BlockToolbarExtension";
 import defaultEditorTheme from "./editorTheme";
+
+const customCodeIndentExtension = configExtension(CodeIndentExtension, {
+	escapeWithArrows: true,
+});
 
 import { $getRoot } from "lexical";
 
@@ -34,6 +45,7 @@ export default function initializeEditor(editorRef) {
 			LinkExtension,
 			ListExtension,
 			CodeExtension,
+			customCodeIndentExtension,
 			CodeShikiExtension,
 			CodeMenuExtension,
 			MathExtension,
@@ -41,6 +53,10 @@ export default function initializeEditor(editorRef) {
 			InlineToolbarExtension,
 			BlockToolbarExtension,
 			MarkdownExtension,
+			AutoFocusExtension,
+			ClickAfterLastBlockExtension,
+			SelectBlockExtension,
+			SelectionAlwaysOnDisplayExtension,
 		],
 		theme: defaultEditorTheme,
 	});
