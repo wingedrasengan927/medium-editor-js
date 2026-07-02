@@ -76,7 +76,6 @@
 				clearTimeout(resizeTimeout);
 				resizeTimeout = setTimeout(() => {
 					if (window.MathJax && MathJax.startup && MathJax.startup.document) {
-						// Roll back typesetting state to CONVERT (100) and re-render
 						MathJax.startup.document.state(100);
 						MathJax.startup.document.render();
 					}
