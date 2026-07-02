@@ -1,5 +1,5 @@
-import "./editor_styles.css";
-import "./styles.css";
+import "./editor_style.css";
+import "./style.css";
 import initializeEditor from "./editor.js";
 import { setupNavbar } from "./navbar.js";
 
