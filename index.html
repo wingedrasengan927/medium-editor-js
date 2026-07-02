@@ -68,10 +68,7 @@
 			</div>
 		</div>
 		<!-- 
-		  Listens to window resizing and applies the state rollback fix.
-		  By rolling the document's state back to 100 (STATE.CONVERT) and 
-		  calling render(), MathJax is forced to re-measure container 
-		  widths and regenerate the linebreaks.
+		  Re-render math equations on resize
 		-->
 		<script>
 			let resizeTimeout;

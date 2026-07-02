@@ -80,22 +80,21 @@
 	}
 }
 
-/* Establish the Container Context on the Wrapper */
-/* Note: container-type MUST be on a parent wrapper, not the editor root itself, 
-   so the editor root can query this wrapper's size. */
 .editor-wrapper {
 	container-type: inline-size;
 	container-name: editor;
+	/* Required for MathJax Linebreak */
 	max-width: 100%;
 	box-sizing: border-box;
 }
 
+/* Required for MathJax Linebreak */
 #lexical-editor {
 	max-width: 100%;
 	box-sizing: border-box;
 }
 
-/* Force MathJax display containers to respect parent boundaries */
+/* Required for MathJax Linebreak */
 mjx-container[display="true"] {
 	max-width: 100% !important;
 	width: 100% !important;
