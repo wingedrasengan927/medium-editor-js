@@ -117,13 +117,18 @@
 
 	.medium-code-block {
 		font-family: "firacode", monospace;
-		white-space: pre-wrap;
+		white-space: pre;
+		overflow-x: auto;
+		min-inline-size: 0; /* Prevents grid blowout from non-wrapping lines */
 		
 		/* Grid Positioning: Align with right edge and spill into left margin */
 		grid-column: pull-start / content-end;
 		
 		/* Dynamic Padding based on our fluid gap variable */
 		padding: var(--gap);
+
+		/* Fluid typography: Clamp between var(--small) (min) and var(--base-size) (max) */
+		font-size: clamp(var(--small), 0.75rem + 0.5cqi, var(--base-size));
 	}
 
 	/* Horizontal Rule */
