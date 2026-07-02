@@ -38,20 +38,6 @@ export const CodeMenuExtension = defineExtension({
 		};
 
 		return mergeRegister(
-			// automatically set the default language to Python whenever a new code node is created
-			editor.registerMutationListener(CodeNode, (mutations) => {
-				editor.update(() => {
-					for (const [nodeKey, mutation] of mutations) {
-						if (mutation === "created") {
-							const codeNode = $getNodeByKey(nodeKey);
-							if ($isCodeNode(codeNode)) {
-								codeNode.setLanguage("python");
-							}
-						}
-					}
-				});
-			}),
-
 			editor.registerCommand(
 				SET_CODE_LANGUAGE_COMMAND,
 				(payload) => {
