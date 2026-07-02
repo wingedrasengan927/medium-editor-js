@@ -86,6 +86,20 @@
 		text-wrap: pretty;
 	}
 
+	.medium-quote {
+		font-style: oblique 10deg;
+		text-wrap: pretty;
+		
+		/* Spacing: Fluid layout variables clamped against container width to prevent off-screen clipping */
+		--quote-indent: clamp(0.75rem, 3cqi, 1.25rem);
+		padding-block: 0.25lh;
+		padding-inline-start: var(--quote-indent);
+		margin-inline-start: calc(-1 * var(--quote-indent));
+
+		/* Accent Border: currentColor adapts to light/dark themes */
+		border-inline-start: 4px solid currentColor;
+	}
+
 	.medium-h1 {
 		font-size: var(--xx-large);
 	}
