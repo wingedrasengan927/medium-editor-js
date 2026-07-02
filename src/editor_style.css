@@ -106,9 +106,49 @@
 		text-wrap: balance; /* Balance is better for headings than 'pretty' */
 	}
 
+	/* Top-level lists: fluid indentation */
 	.medium-ol,
 	.medium-ul {
 		padding-inline-start: var(--tab);
+		list-style-position: outside;
+	}
+
+	/* Nested lists: fluid indentation scaled by the typographic scale */
+	.medium-listitem .medium-ol,
+	.medium-listitem .medium-ul {
+		padding-inline-start: calc(var(--tab) * var(--scale));
+	}
+
+	/* Monospace markers from old styles */
+	.medium-listitem::marker {
+		font-family: "firacode", monospace;
+	}
+
+	/* Prevents visual double markers for items hosting nested sublists */
+	.medium-listitem:has(> .medium-ol),
+	.medium-listitem:has(> .medium-ul) {
+		list-style-type: none;
+	}
+
+	/* Nesting level specific counters */
+	.medium-ol {
+		list-style-type: decimal;
+	}
+
+	.medium-listitem > .medium-ol {
+		list-style-type: lower-alpha;
+	}
+
+	.medium-listitem .medium-listitem > .medium-ol {
+		list-style-type: lower-roman;
+	}
+
+	.medium-listitem .medium-listitem .medium-listitem > .medium-ol {
+		list-style-type: upper-alpha;
+	}
+
+	.medium-listitem .medium-listitem .medium-listitem .medium-listitem > .medium-ol {
+		list-style-type: upper-roman;
 	}
 
 	.medium-code {
