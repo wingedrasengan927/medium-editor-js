@@ -250,3 +250,55 @@
 .medium-editor-root :target {
 	scroll-margin: 1lh;
 }
+
+/* Math Highlight and Rendered Nodes */
+.math-highlight-inline {
+	font-family: "firacode", monospace;
+	font-size: 0.875em;
+	background-color: rgba(0, 0, 0, 0.06);
+	border-radius: 0.2em;
+	padding-block: 0.1em;
+	padding-inline: 0.25em;
+	margin-inline: 0.125em;
+}
+
+.math-highlight-inline::before,
+.math-highlight-inline::after {
+	content: "$";
+	color: #b0b0b0;
+	pointer-events: none;
+	user-select: none;
+}
+
+.math-highlight-block {
+	display: block;
+	grid-column: content; /* Align exactly with default paragraph column */
+	font-family: "firacode", monospace;
+	font-size: 0.875em;
+	background-color: rgba(0, 0, 0, 0.04);
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 0.25em;
+	padding-block: 0.5lh;
+	padding-inline: var(--gap);
+	margin-block: 0.25lh;
+}
+
+.math-highlight-block::before,
+.math-highlight-block::after {
+	content: "$$";
+	color: #b0b0b0;
+	pointer-events: none;
+	user-select: none;
+	display: block;
+}
+
+.math-rendered-inline,
+.math-rendered-inline *,
+.math-rendered-block,
+.math-rendered-block * {
+	cursor: pointer;
+}
+
+.math-rendered-block {
+	display: block;
+}
