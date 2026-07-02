@@ -4,6 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>medium-editor-js</title>
+
 		<script>
 			window.MathJax = {
 				tex: {
@@ -16,10 +17,12 @@
 						["\\[", "\\]"],
 					],
 				},
-				chtml: {
-					displayOverflow: "scroll",
+				output: {
+					displayOverflow: "linebreak",
 					linebreaks: {
 						inline: true,
+						width: "100%",
+						lineleading: 0.6
 					},
 				},
 				startup: {
@@ -64,6 +67,25 @@
 				<div id="lexical-editor" contenteditable="true"></div>
 			</div>
 		</div>
+		<!-- 
+		  Listens to window resizing and applies the state rollback fix.
+		  By rolling the document's state back to 100 (STATE.CONVERT) and 
+		  calling render(), MathJax is forced to re-measure container 
+		  widths and regenerate the linebreaks.
+		-->
+		<script>
+			let resizeTimeout;
+			window.addEventListener("resize", () => {
+				clearTimeout(resizeTimeout);
+				resizeTimeout = setTimeout(() => {
+					if (window.MathJax && MathJax.startup && MathJax.startup.document) {
+						// Roll back typesetting state to CONVERT (100) and re-render
+						MathJax.startup.document.state(100);
+						MathJax.startup.document.render();
+					}
+				}, 200); // 200ms debounce to prevent layout thrashing
+			});
+		</script>
 		<script type="module" src="/src/main.js"></script>
 	</body>
 </html>
