@@ -1,0 +1,165 @@
+@import url("./font-styles.css");
+
+.medium-editor-root {
+		font-family: "merriweather", serif;
+		outline: none;
+
+		/* Rhythm baselines */
+		--line-height-base: 1.5;
+		--tab-size: 2;
+		--tab: calc(var(--tab-size) * 1ch);
+		--gap: round(up, 3vmin, 0.25lh);
+
+		/* Musical scale ratios */
+		--minor-second: calc(16/15);
+		--major-second: calc(9/8);
+		--minor-third: calc(6/5);
+		--major-third: calc(5/4);
+		--perfect-fourth: calc(4/3);
+		--augmented-fourth: sqrt(2);
+		--perfect-fifth: calc(3/2);
+		--major-sixth: calc(5/3);
+		--golden-ratio: calc((1 + sqrt(5)) / 2);
+
+		/* Base typography rules */
+		overflow-wrap: break-word;
+		-webkit-text-size-adjust: none;
+		text-size-adjust: none;
+		tab-size: var(--tab-size);
+		line-height: var(--line-height-base);
+
+		--base-size: clamp(1rem, 17px + 0.24cqi, 1.25rem);
+		font-size: var(--base-size);
+
+		/* Default to a smaller scale (minor third) for narrow containers */
+		--scale: var(--minor-third);
+
+		/* Calculate sizes exponentially using CSS pow() */
+		--xx-small: calc(1rem * pow(var(--scale), -0.3));
+		--x-small: calc(1rem * pow(var(--scale), -0.2));
+		--small: calc(1rem * pow(var(--scale), -0.1));
+		--large: calc(var(--base-size) * pow(var(--scale), 1));
+		--x-large: calc(var(--base-size) * pow(var(--scale), 2));
+		--xx-large: calc(var(--base-size) * pow(var(--scale), 3));
+		--xxx-large: calc(var(--base-size) * pow(var(--scale), 4));
+
+		/* The Medium Grid Layout */
+		display: grid;
+		gap: 1lh 0; /* Vertical rhythm */
+		grid-template-columns:
+			[full-start] var(--margin, var(--gap))
+			[pull-start] minmax(0, 1.5fr)
+			[content-start] minmax(auto, 42em)
+			[content-end] minmax(0, 1fr)
+			[pull-end] var(--margin, var(--gap))
+			[full-end];
+	}
+
+	/* Reset outer margins on larger screens */
+	@container editor (inline-size > 45em) {
+		.medium-editor-root {
+			--margin: 0;
+			column-gap: var(--gap);
+		}
+	}
+
+	/* Force all direct children into the center reading column */
+	.medium-editor-root > * {
+		margin: unset;
+		grid-column: content;
+	}
+
+	/* 
+    Container Query: 
+    When the editor wrapper is wider than 50em (~800px), 
+    increase the contrast between headings and body text by using a Major Third scale.
+  */
+	@container editor (inline-size > 50em) {
+		.medium-editor-root {
+			--scale: var(--major-third);
+		}
+	}
+
+	/* Specific element styling targeting Lexical nodes */
+	.medium-paragraph,
+	.medium-listitem {
+		text-wrap: pretty;
+	}
+
+	.medium-h1 {
+		font-size: var(--xx-large);
+	}
+
+	.medium-h2 {
+		font-size: var(--x-large);
+	}
+
+	.medium-h3 {
+		font-size: var(--large);
+	}
+
+	.medium-h1,
+	.medium-h2,
+	.medium-h3 {
+		font-family: "merriweather-sans", sans-serif;
+		line-height: 1.25;
+		text-wrap: balance; /* Balance is better for headings than 'pretty' */
+	}
+
+	.medium-ol,
+	.medium-ul {
+		padding-inline-start: var(--tab);
+	}
+
+	.medium-code {
+		font-family: "firacode", monospace;
+	}
+
+	.medium-code-block {
+		font-family: "firacode", monospace;
+		white-space: pre-wrap;
+		
+		/* Grid Positioning: Align with right edge and spill into left margin */
+		grid-column: pull-start / content-end;
+		
+		/* Dynamic Padding based on our fluid gap variable */
+		padding: var(--gap);
+	}
+
+	/* Horizontal Rule */
+	.medium-divider {
+		border: 0 dotted;
+		border-block-end-width: thin;
+		margin-block: 0.5lh;
+	}
+
+	/* Figures and Images (Wide layout!) */
+	.medium-img {
+		margin: unset;
+		grid-column: pull-start / content-end;
+		justify-self: end;
+		cursor: pointer;
+		transition: outline 0.2s ease-in-out;
+		outline: 3px solid transparent;
+	}
+
+	.medium-img:hover,
+	.medium-img.selected {
+		outline: 3px solid #9c27b0;
+	}
+
+	.medium-img img {
+		display: block;
+		block-size: auto;
+		max-inline-size: 100%;
+	}
+
+	.medium-editor-root figcaption {
+		font-size: var(--small);
+		font-style: italic;
+	}
+
+	/* Anchor Link Targets */
+	.medium-editor-root :target {
+		scroll-margin: 1lh;
+	}
