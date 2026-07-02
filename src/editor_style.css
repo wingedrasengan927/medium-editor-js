@@ -87,6 +87,7 @@
 }
 
 .medium-quote {
+  font-family: "merriweather-sans", sans-serif;
 	font-style: oblique 10deg;
 	text-wrap: pretty;
 
@@ -101,7 +102,9 @@
 }
 
 .medium-h1 {
+  font-family: "playfair_display", serif;
 	font-size: var(--xx-large);
+	font-weight: 600;
 }
 
 .medium-h2 {
