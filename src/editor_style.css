@@ -169,6 +169,14 @@
 	list-style-type: upper-roman;
 }
 
+.medium-bold {
+	font-weight: bold;
+}
+
+.medium-italic {
+	font-style: italic;
+}
+
 .medium-code {
 	font-family: "firacode", monospace;
 }
