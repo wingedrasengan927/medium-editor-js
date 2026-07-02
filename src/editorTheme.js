@@ -1,4 +1,5 @@
 const defaultEditorTheme = {
+	root: "medium-editor-root",
 	paragraph: "medium-paragraph",
 	heading: {
 		h1: "medium-h1",
