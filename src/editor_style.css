@@ -179,6 +179,18 @@
 
 .medium-code {
 	font-family: "firacode", monospace;
+	font-weight: lighter;
+	font-style: normal;
+	font-size: 0.875em;
+	
+	/* Logical fluid padding and margins */
+	padding-block: 0.1em;
+	padding-inline: 0.35em;
+	margin-inline: 0.125em;
+	
+	/* Theme-friendly background and relative border radius */
+	background-color: rgba(0, 0, 0, 0.06);
+	border-radius: 0.2em;
 }
 
 .medium-link {
