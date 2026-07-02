@@ -10,10 +10,13 @@
 		".": {
 			"import": "./dist/index.js"
 		},
-		"./style.css": "./dist/index.css"
+		"./style.css": "./dist/index.css",
+		"./editor_style.css": "./src/editor_style.css",
+		"./transformers/*": "./src/transformers/*"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"src"
 	],
 	"scripts": {
 		"dev": "vite",
