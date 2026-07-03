@@ -120,7 +120,17 @@ export class MathHighlightNodeBlock extends ElementNode {
 			const index = split.getIndexWithinParent() + x;
 			const nodesToInsert = [$createLineBreakNode()];
 			this.splice(index, 0, nodesToInsert);
-			split.getNextSibling().selectNext(0, 0);
+
+			const nextSibling = split.getNextSibling();
+			if (nextSibling !== null) {
+				if (nextSibling.getNextSibling() !== null) {
+					nextSibling.selectNext(0, 0);
+				} else {
+					this.select(index + 1, index + 1);
+				}
+			} else {
+				split.select(0, 0);
+			}
 		} else if (anchorNode.getKey() === this.getKey()) {
 			// Cursor is positioned at an empty element block. Insert line break.
 			const { offset } = anchor;
