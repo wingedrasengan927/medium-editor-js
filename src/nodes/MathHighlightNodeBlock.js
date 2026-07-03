@@ -8,6 +8,7 @@ import {
 	$create,
 	$applyNodeReplacement,
 	$isRangeSelection,
+	$isRootNode,
 } from "lexical";
 import { addClassNamesToElement } from "@lexical/utils";
 
@@ -93,7 +94,18 @@ export class MathHighlightNodeBlock extends ElementNode {
 			// Exit the block since the cursor is at the empty line after the line break.
 			lastChild.remove(); // Remove the trailing LineBreakNode
 			const paragraphNode = $createParagraphNode();
-			this.insertAfter(paragraphNode);
+			
+			// Find the top level parent (direct child of root) to insert the paragraph after it
+			let topLevelParent = this;
+			while (topLevelParent !== null) {
+				const parent = topLevelParent.getParent();
+				if (parent === null || $isRootNode(parent)) {
+					break;
+				}
+				topLevelParent = parent;
+			}
+			
+			topLevelParent.insertAfter(paragraphNode);
 			paragraphNode.select();
 			return paragraphNode;
 		}
