@@ -53,7 +53,17 @@ export const MATH_BLOCK_SINGLE_LINE_TRANSFORMER = {
 // Only used during imports
 export const MATH_BLOCK_MULTILINE_TRANSFORMER = {
 	dependencies: [MathNode],
-	export: () => null,
+	export: (node) => {
+		if ($isMathNode(node) && !node.isInline()) {
+			let eq = node.getEquation();
+			if (eq.startsWith("$$") && eq.endsWith("$$")) {
+				eq = eq.slice(2, -2);
+			}
+			const cleanEquation = eq.replace(/[\r\n]/g, "").trim();
+			return `$$\n${cleanEquation}\n$$`;
+		}
+		return null;
+	},
 	regExpEnd: {
 		optional: false,
 		regExp: /^\$\$/,
