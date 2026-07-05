@@ -178,22 +178,12 @@ export class CodeMenu {
 		const popover = document.createElement("div");
 		popover.className = "code-menu-popover";
 
-		const searchContainer = document.createElement("div");
-		searchContainer.className = "code-menu-search";
-		const searchInput = document.createElement("input");
-		searchInput.type = "text";
-		searchInput.placeholder = `Search ${placeholder.toLowerCase()}...`;
-		searchContainer.appendChild(searchInput);
-
 		const optionsContainer = document.createElement("div");
 		optionsContainer.className = "code-menu-options";
 
-		const renderOptions = (filter = "") => {
+		const renderOptions = () => {
 			optionsContainer.innerHTML = "";
-			const filtered = options.filter((opt) =>
-				opt.toLowerCase().includes(filter.toLowerCase()),
-			);
-			filtered.forEach((opt) => {
+			options.forEach((opt) => {
 				const item = document.createElement("div");
 				item.className = "code-menu-option";
 				item.textContent = opt;
@@ -210,23 +200,16 @@ export class CodeMenu {
 
 		renderOptions();
 
-		searchInput.addEventListener("input", (e) => {
-			renderOptions(e.target.value);
-		});
-
 		button.addEventListener("click", (e) => {
 			e.stopPropagation();
 			const isOpen = popover.classList.contains("open");
 			this.#closePopovers();
 			if (!isOpen) {
 				popover.classList.add("open");
-				searchInput.value = "";
 				renderOptions();
-				setTimeout(() => searchInput.focus(), 10);
 			}
 		});
 
-		popover.appendChild(searchContainer);
 		popover.appendChild(optionsContainer);
 		container.appendChild(button);
 		container.appendChild(popover);
