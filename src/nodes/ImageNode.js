@@ -53,11 +53,6 @@ export class ImageNode extends DecoratorNode {
 	exportDOM(editor) {
 		const { element } = super.exportDOM(editor);
 		element.setAttribute("data-lexical-image-container", "true");
-
-		const imgElement = document.createElement("img");
-		imgElement.setAttribute("src", this.getSrc());
-
-		element.appendChild(imgElement);
 		return { element };
 	}
 
