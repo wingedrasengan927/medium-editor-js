@@ -1,5 +1,10 @@
 import { defineExtension } from "lexical";
-import { registerMarkdownShortcuts, TRANSFORMERS } from "@lexical/markdown";
+import {
+	registerMarkdownShortcuts,
+	ELEMENT_TRANSFORMERS,
+	MULTILINE_ELEMENT_TRANSFORMERS,
+	TEXT_MATCH_TRANSFORMERS,
+} from "@lexical/markdown";
 import { HR_TRANSFORMER } from "../transformers/HRTransformer";
 import {
 	MATH_INLINE_TRANSFORMER,
@@ -39,7 +44,9 @@ export const MarkdownExtension = defineExtension({
 			MATH_BLOCK_MULTILINE_TRANSFORMER,
 			MATH_HIGHLIGHT_BLOCK_TRANSFORMER,
 			IMAGE_TRANSFORMER,
-			...TRANSFORMERS,
+			...ELEMENT_TRANSFORMERS,
+			...MULTILINE_ELEMENT_TRANSFORMERS,
+			...TEXT_MATCH_TRANSFORMERS,
 		];
 		const wrappedTransformers = transformers.map(wrapTransformer);
 		return registerMarkdownShortcuts(editor, wrappedTransformers);
