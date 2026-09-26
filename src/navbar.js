@@ -1,5 +1,6 @@
 import { $generateHtmlFromNodes } from "@lexical/html";
-import { $convertToMarkdownString, $convertFromMarkdownString, TRANSFORMERS } from "@lexical/markdown";
+import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
+import { $insertMarkdown } from "./insertMarkdown.js";
 import copySvg from "@tabler/icons/outline/copy.svg?raw";
 import clipboardSvg from "@tabler/icons/outline/clipboard.svg?raw";
 import { HR_TRANSFORMER } from "./transformers/HRTransformer";
@@ -48,14 +49,15 @@ export function setupNavbar(editor) {
 	const pasteMarkdownBtn = document.getElementById("paste-markdown-btn");
 	if (pasteMarkdownBtn) {
 		pasteMarkdownBtn.innerHTML = `${clipboardSvg}<span>Paste MD</span>`;
+		pasteMarkdownBtn.addEventListener("mousedown", (event) => {
+			// IMPORTANT: Keep the editor selection when clicking the toolbar button.
+			event.preventDefault();
+		});
 		pasteMarkdownBtn.addEventListener("click", async () => {
 			try {
 				const markdown = await navigator.clipboard.readText();
-				// Sanitize linebreaks
-				const sanitizedMarkdown = markdown.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 				editor.update(() => {
-					// Note: This replaces all existing editor content
-					$convertFromMarkdownString(sanitizedMarkdown, [
+					$insertMarkdown(markdown, [
 						HR_TRANSFORMER,
 						MATH_INLINE_TRANSFORMER,
 						MATH_BLOCK_SINGLE_LINE_TRANSFORMER,
